@@ -23,7 +23,6 @@ export default function WeddingInvitation() {
   const [petals, setPetals] = useState<Petal[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Generate petals strictly on client mount to eliminate SSR hydration errors
   useEffect(() => {
     const generatedPetals: Petal[] = Array.from({ length: 15 }).map((_, i) => ({
       id: i,
@@ -147,7 +146,8 @@ export default function WeddingInvitation() {
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: '#140104',
-              padding: '16px',
+              padding: '0 12px',
+              boxSizing: 'border-box',
               overflow: 'hidden'
             }}
           >
@@ -188,8 +188,8 @@ export default function WeddingInvitation() {
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
               style={{
                 position: 'absolute',
-                width: '320px',
-                height: '320px',
+                width: '400px',
+                height: '400px',
                 borderRadius: '9999px',
                 background: 'radial-gradient(circle, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0) 70%)',
                 pointerEvents: 'none',
@@ -202,7 +202,7 @@ export default function WeddingInvitation() {
               animate={{ opacity: isOpeningAnimation ? 0 : [0.5, 1, 0.5], y: isOpeningAnimation ? -10 : 0 }}
               transition={{ repeat: Infinity, duration: 1.8 }}
               style={{
-                marginBottom: '28px',
+                marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
@@ -217,185 +217,204 @@ export default function WeddingInvitation() {
               <Sparkles size={14} /> Tap Seal To Open Invitation <Sparkles size={14} />
             </motion.p>
 
-            {/* 3D Envelope Container */}
+            {/* FULL SCREEN COVERAGE 3D ENVELOPE */}
             <div
-              onClick={handleOpenEnvelope}
               style={{
-                position: 'relative',
                 width: '100%',
-                maxWidth: '360px',
-                height: '250px',
-                cursor: 'pointer',
-                perspective: '1000px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 zIndex: 10
               }}
             >
-              {/* Back Shell of Envelope */}
               <div
+                onClick={handleOpenEnvelope}
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '16px',
-                  backgroundColor: '#3a080f',
-                  border: '1px solid rgba(212, 175, 55, 0.5)',
-                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(212, 175, 55, 0.15)'
-                }}
-              />
-
-              {/* Inside Invitation Card (Slides Up) */}
-              <motion.div
-                initial={{ y: 0, scale: 1 }}
-                animate={{
-                  y: isOpeningAnimation ? -130 : 0,
-                  scale: isOpeningAnimation ? 1.05 : 1
-                }}
-                transition={{ duration: 0.8, ease: 'easeInOut', delay: 0.2 }}
-                style={{
-                  position: 'absolute',
-                  left: '16px',
-                  right: '16px',
-                  top: '16px',
-                  bottom: '16px',
-                  zIndex: 10,
-                  borderRadius: '12px',
-                  border: '1px solid #d4af37',
-                  backgroundColor: '#2b040a',
-                  padding: '20px',
-                  textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.6)'
+                  position: 'relative',
+                  width: '100%',
+                  height: '62vh', /* Fills full height of modern phones nicely like the reference video */
+                  minHeight: '420px',
+                  maxHeight: '560px',
+                  cursor: 'pointer',
+                  perspective: '1200px'
                 }}
               >
-                <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d4af37' }}>
-                  Shubh Vivah
-                </span>
-                <h2 style={{ margin: '8px 0 4px 0', fontSize: '26px', fontWeight: 'bold', color: '#ffe082', fontFamily: 'serif' }}>
-                  Harsh &amp; Rutbi
-                </h2>
-                <p style={{ margin: 0, fontSize: '11px', color: '#fecdd3', letterSpacing: '0.15em' }}>
-                  DECEMBER 9, 2026
-                </p>
-              </motion.div>
-
-              {/* Envelope Lower Pocket Layer */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  zIndex: 20,
-                  pointerEvents: 'none',
-                  borderRadius: '16px',
-                  backgroundColor: '#32060c',
-                  clipPath: 'polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%, 50% 50%)',
-                  borderBottom: '2px solid #d4af37',
-                  boxShadow: 'inset 0 10px 25px rgba(0,0,0,0.7)'
-                }}
-              />
-
-              {/* Top Flap (Flips Open vertically) */}
-              <motion.div
-                initial={{ rotateX: 0 }}
-                animate={{ rotateX: isOpeningAnimation ? 180 : 0 }}
-                transition={{ duration: 0.5, ease: 'easeInOut' }}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '125px',
-                  zIndex: 30,
-                  transformOrigin: 'top center',
-                  pointerEvents: 'none'
-                }}
-              >
+                {/* Back Shell of Envelope */}
                 <div
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    borderTopLeftRadius: '16px',
-                    borderTopRightRadius: '16px',
-                    backgroundColor: '#440a12',
-                    borderTop: '1px solid #d4af37',
-                    clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)'
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: '24px',
+                    backgroundColor: '#3a080f',
+                    border: '1.5px solid rgba(212, 175, 55, 0.6)',
+                    boxShadow: '0 30px 70px rgba(0, 0, 0, 0.95), inset 0 0 25px rgba(212, 175, 55, 0.2)'
                   }}
                 />
-              </motion.div>
 
-              {/* WAX SEAL WITH PULSING RIPPLE RINGS */}
-              <motion.div
-                initial={{ x: '-50%', y: '-50%' }}
-                animate={{
-                  x: '-50%',
-                  y: '-50%',
-                  scale: isOpeningAnimation ? [1, 1.25, 0] : 1,
-                  opacity: isOpeningAnimation ? 0 : 1
-                }}
-                transition={{ duration: 0.4 }}
-                style={{
-                  position: 'absolute',
-                  top: '125px',
-                  left: '50%',
-                  zIndex: 40,
-                  width: '58px',
-                  height: '58px',
-                  borderRadius: '9999px',
-                  backgroundColor: '#d4af37',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 0 20px rgba(212, 175, 55, 0.6), 0 10px 20px rgba(0,0,0,0.6)',
-                  border: '2px solid #fff8f0'
-                }}
-              >
-                {/* Concentric Pulse Ring 1 */}
-                {!isOpeningAnimation && (
-                  <motion.div
-                    animate={{ scale: [1, 1.6], opacity: [0.8, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.8, ease: 'easeOut' }}
-                    style={{
-                      position: 'absolute',
-                      inset: '-4px',
-                      borderRadius: '9999px',
-                      border: '2px solid #d4af37',
-                      pointerEvents: 'none'
-                    }}
-                  />
-                )}
-
-                {/* Concentric Pulse Ring 2 */}
-                {!isOpeningAnimation && (
-                  <motion.div
-                    animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.8, delay: 0.4, ease: 'easeOut' }}
-                    style={{
-                      position: 'absolute',
-                      inset: '-4px',
-                      borderRadius: '9999px',
-                      border: '1.5px solid #ffe082',
-                      pointerEvents: 'none'
-                    }}
-                  />
-                )}
-
-                <div
+                {/* Inside Invitation Card */}
+                <motion.div
+                  initial={{ y: 0, scale: 1 }}
+                  animate={{
+                    y: isOpeningAnimation ? -200 : 0,
+                    scale: isOpeningAnimation ? 1.05 : 1
+                  }}
+                  transition={{ duration: 0.8, ease: 'easeInOut', delay: 0.2 }}
                   style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '9999px',
-                    backgroundColor: '#a81c24',
-                    border: '1px solid #8B0000',
+                    position: 'absolute',
+                    left: '16px',
+                    right: '16px',
+                    top: '20px',
+                    bottom: '20px',
+                    zIndex: 10,
+                    borderRadius: '16px',
+                    border: '1.5px solid #d4af37',
+                    backgroundColor: '#2b040a',
+                    padding: '24px',
+                    textAlign: 'center',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#ffe082'
+                    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.8)'
                   }}
                 >
-                  <Heart size={22} fill="#ffe082" />
+                  <span style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.25em', color: '#d4af37', fontWeight: 600 }}>
+                    Shubh Vivah
+                  </span>
+                  <h2 style={{ margin: '14px 0 8px 0', fontSize: '36px', fontWeight: 'bold', color: '#ffe082', fontFamily: 'serif', letterSpacing: '0.02em' }}>
+                    Harsh &amp; Rutbi
+                  </h2>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#fecdd3', letterSpacing: '0.2em', fontWeight: 500 }}>
+                    DECEMBER 9, 2026
+                  </p>
+                </motion.div>
+
+                {/* Envelope Lower Pocket Layer */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 20,
+                    pointerEvents: 'none',
+                    borderRadius: '24px',
+                    backgroundColor: '#32060c',
+                    clipPath: 'polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%, 50% 50%)',
+                    borderBottom: '2px solid #d4af37',
+                    boxShadow: 'inset 0 15px 35px rgba(0,0,0,0.85)'
+                  }}
+                />
+
+                {/* Top Flap */}
+                <motion.div
+                  initial={{ rotateX: 0 }}
+                  animate={{ rotateX: isOpeningAnimation ? 180 : 0 }}
+                  transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '50%',
+                    zIndex: 30,
+                    transformOrigin: 'top center',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderTopLeftRadius: '24px',
+                      borderTopRightRadius: '24px',
+                      backgroundColor: '#440a12',
+                      borderTop: '1.5px solid #d4af37',
+                      clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)'
+                    }}
+                  />
+                </motion.div>
+
+                {/* PERFECTLY CENTERED ROYAL WAX SEAL */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '0',
+                    right: '0',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 40,
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <motion.div
+                    animate={{
+                      scale: isOpeningAnimation ? [1, 1.25, 0] : 1,
+                      opacity: isOpeningAnimation ? 0 : 1
+                    }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      width: '72px',
+                      height: '72px',
+                      marginTop: '-36px',
+                      borderRadius: '9999px',
+                      backgroundColor: '#d4af37',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 0 30px rgba(212, 175, 55, 0.8), 0 10px 30px rgba(0,0,0,0.9)',
+                      border: '2px solid #fff8f0',
+                      position: 'relative'
+                    }}
+                  >
+                    {/* Concentric Pulse Ring 1 */}
+                    {!isOpeningAnimation && (
+                      <motion.div
+                        animate={{ scale: [1, 1.6], opacity: [0.8, 0] }}
+                        transition={{ repeat: Infinity, duration: 1.8, ease: 'easeOut' }}
+                        style={{
+                          position: 'absolute',
+                          inset: '-4px',
+                          borderRadius: '9999px',
+                          border: '2px solid #d4af37',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                    )}
+
+                    {/* Concentric Pulse Ring 2 */}
+                    {!isOpeningAnimation && (
+                      <motion.div
+                        animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
+                        transition={{ repeat: Infinity, duration: 1.8, delay: 0.4, ease: 'easeOut' }}
+                        style={{
+                          position: 'absolute',
+                          inset: '-4px',
+                          borderRadius: '9999px',
+                          border: '1.5px solid #ffe082',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                    )}
+
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '9999px',
+                        backgroundColor: '#a81c24',
+                        border: '1px solid #8B0000',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#ffe082'
+                      }}
+                    >
+                      <Heart size={28} fill="#ffe082" />
+                    </div>
+                  </motion.div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
