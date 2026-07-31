@@ -1,18 +1,56 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, MapPin, Sparkles, Heart, Calendar, Clock, Compass } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import HeartScratchCard from './components/HeartScratchCard';
 import CountdownTimer from './components/CountdownTimer';
 
+interface Petal {
+  id: number;
+  x: number;
+  delay: number;
+  duration: number;
+  size: number;
+  rotate: number;
+}
+
 export default function WeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpeningAnimation, setIsOpeningAnimation] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [petals, setPetals] = useState<Petal[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Generate petals strictly on client mount to eliminate SSR hydration errors
+  useEffect(() => {
+    const generatedPetals: Petal[] = Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 6 + Math.random() * 6,
+      size: 8 + Math.random() * 12,
+      rotate: Math.random() * 360,
+    }));
+    setPetals(generatedPetals);
+  }, []);
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#d4af37', '#ff4d6d', '#ffe082', '#a81c24'],
+    });
+  };
+
   const handleOpenEnvelope = async () => {
-    setIsOpen(true);
+    if (isOpeningAnimation || isOpen) return;
+
+    setIsOpeningAnimation(true);
+    triggerConfetti();
+
     if (audioRef.current) {
       try {
         const playPromise = audioRef.current.play();
@@ -21,13 +59,16 @@ export default function WeddingInvitation() {
           setIsPlaying(true);
         }
       } catch (err: any) {
-        // Suppress browser autoplay abort warnings cleanly
         if (err.name !== 'AbortError') {
           console.warn('Audio autoplay prevented:', err);
         }
         setIsPlaying(false);
       }
     }
+
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 1300);
   };
 
   const toggleAudio = async () => {
@@ -53,7 +94,7 @@ export default function WeddingInvitation() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#2b040a', color: '#fff8f0', position: 'relative', fontFamily: 'sans-serif' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#2b040a', color: '#fff8f0', position: 'relative', fontFamily: 'sans-serif', overflowX: 'hidden' }}>
       {/* Background Audio */}
       <audio 
         ref={audioRef} 
@@ -77,7 +118,7 @@ export default function WeddingInvitation() {
             border: '1px solid #d4af37',
             color: '#d4af37',
             cursor: 'pointer',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)'
+            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.6)'
           }}
           aria-label="Toggle Audio"
         >
@@ -85,13 +126,13 @@ export default function WeddingInvitation() {
         </button>
       )}
 
-      {/* 1. ENVELOPE / GATEWAY OVERLAY (Centered Modal) */}
+      {/* 1. ANIMATED ENVELOPE GATEWAY OVERLAY */}
       <AnimatePresence>
         {!isOpen && (
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
             style={{
               position: 'fixed',
               top: 0,
@@ -102,88 +143,259 @@ export default function WeddingInvitation() {
               height: '100vh',
               zIndex: 50,
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(26, 2, 6, 0.95)',
-              padding: '16px'
+              backgroundColor: '#140104',
+              padding: '16px',
+              overflow: 'hidden'
             }}
           >
-            <div
+            {/* FLOATING ROSE PETALS ANIMATION */}
+            {petals.map((petal) => (
+              <motion.div
+                key={petal.id}
+                initial={{ y: '-10vh', x: `${petal.x}vw`, rotate: 0, opacity: 0 }}
+                animate={{
+                  y: '110vh',
+                  x: [`${petal.x}vw`, `${petal.x + 10}vw`, `${petal.x - 5}vw`],
+                  rotate: [0, 180, 360],
+                  opacity: [0, 0.7, 0.7, 0]
+                }}
+                transition={{
+                  duration: petal.duration,
+                  repeat: Infinity,
+                  delay: petal.delay,
+                  ease: 'linear'
+                }}
+                style={{
+                  position: 'absolute',
+                  width: `${petal.size}px`,
+                  height: `${petal.size * 1.3}px`,
+                  backgroundColor: '#d4af37',
+                  borderRadius: '50% 0 50% 50%',
+                  opacity: 0.6,
+                  filter: 'blur(1px)',
+                  pointerEvents: 'none',
+                  zIndex: 1
+                }}
+              />
+            ))}
+
+            {/* Glowing Ambient Backdrop Behind Envelope */}
+            <motion.div
+              animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.45, 0.25] }}
+              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
               style={{
-                width: '100%',
-                maxWidth: '400px',
-                backgroundColor: '#3a080f',
-                borderRadius: '16px',
-                padding: '32px 24px',
-                border: '2px solid #d4af37',
-                textAlign: 'center',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+                position: 'absolute',
+                width: '320px',
+                height: '320px',
+                borderRadius: '9999px',
+                background: 'radial-gradient(circle, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0) 70%)',
+                pointerEvents: 'none',
+                zIndex: 2
+              }}
+            />
+
+            {/* Tap Instruction Header */}
+            <motion.p
+              animate={{ opacity: isOpeningAnimation ? 0 : [0.5, 1, 0.5], y: isOpeningAnimation ? -10 : 0 }}
+              transition={{ repeat: Infinity, duration: 1.8 }}
+              style={{
+                marginBottom: '28px',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                minHeight: '420px',
-                boxSizing: 'border-box'
+                gap: '8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.2em',
+                color: '#ffe082',
+                zIndex: 10
               }}
             >
-              {/* Header Badge */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#d4af37' }}>
-                <Sparkles size={16} />
-                <span style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 600 }}>
+              <Sparkles size={14} /> Tap Seal To Open Invitation <Sparkles size={14} />
+            </motion.p>
+
+            {/* 3D Envelope Container */}
+            <div
+              onClick={handleOpenEnvelope}
+              style={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: '360px',
+                height: '250px',
+                cursor: 'pointer',
+                perspective: '1000px',
+                zIndex: 10
+              }}
+            >
+              {/* Back Shell of Envelope */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: '16px',
+                  backgroundColor: '#3a080f',
+                  border: '1px solid rgba(212, 175, 55, 0.5)',
+                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(212, 175, 55, 0.15)'
+                }}
+              />
+
+              {/* Inside Invitation Card (Slides Up) */}
+              <motion.div
+                initial={{ y: 0, scale: 1 }}
+                animate={{
+                  y: isOpeningAnimation ? -130 : 0,
+                  scale: isOpeningAnimation ? 1.05 : 1
+                }}
+                transition={{ duration: 0.8, ease: 'easeInOut', delay: 0.2 }}
+                style={{
+                  position: 'absolute',
+                  left: '16px',
+                  right: '16px',
+                  top: '16px',
+                  bottom: '16px',
+                  zIndex: 10,
+                  borderRadius: '12px',
+                  border: '1px solid #d4af37',
+                  backgroundColor: '#2b040a',
+                  padding: '20px',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.6)'
+                }}
+              >
+                <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d4af37' }}>
                   Shubh Vivah
                 </span>
-                <Sparkles size={16} />
-              </div>
+                <h2 style={{ margin: '8px 0 4px 0', fontSize: '26px', fontWeight: 'bold', color: '#ffe082', fontFamily: 'serif' }}>
+                  Harsh &amp; Rutbi
+                </h2>
+                <p style={{ margin: 0, fontSize: '11px', color: '#fecdd3', letterSpacing: '0.15em' }}>
+                  DECEMBER 9, 2026
+                </p>
+              </motion.div>
 
-              {/* Central Details */}
-              <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+              {/* Envelope Lower Pocket Layer */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 20,
+                  pointerEvents: 'none',
+                  borderRadius: '16px',
+                  backgroundColor: '#32060c',
+                  clipPath: 'polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%, 50% 50%)',
+                  borderBottom: '2px solid #d4af37',
+                  boxShadow: 'inset 0 10px 25px rgba(0,0,0,0.7)'
+                }}
+              />
+
+              {/* Top Flap (Flips Open vertically) */}
+              <motion.div
+                initial={{ rotateX: 0 }}
+                animate={{ rotateX: isOpeningAnimation ? 180 : 0 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '125px',
+                  zIndex: 30,
+                  transformOrigin: 'top center',
+                  pointerEvents: 'none'
+                }}
+              >
                 <div
                   style={{
-                    width: '64px',
-                    height: '64px',
-                    margin: '0 auto 16px auto',
+                    width: '100%',
+                    height: '100%',
+                    borderTopLeftRadius: '16px',
+                    borderTopRightRadius: '16px',
+                    backgroundColor: '#440a12',
+                    borderTop: '1px solid #d4af37',
+                    clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)'
+                  }}
+                />
+              </motion.div>
+
+              {/* WAX SEAL WITH PULSING RIPPLE RINGS */}
+              <motion.div
+                initial={{ x: '-50%', y: '-50%' }}
+                animate={{
+                  x: '-50%',
+                  y: '-50%',
+                  scale: isOpeningAnimation ? [1, 1.25, 0] : 1,
+                  opacity: isOpeningAnimation ? 0 : 1
+                }}
+                transition={{ duration: 0.4 }}
+                style={{
+                  position: 'absolute',
+                  top: '125px',
+                  left: '50%',
+                  zIndex: 40,
+                  width: '58px',
+                  height: '58px',
+                  borderRadius: '9999px',
+                  backgroundColor: '#d4af37',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 20px rgba(212, 175, 55, 0.6), 0 10px 20px rgba(0,0,0,0.6)',
+                  border: '2px solid #fff8f0'
+                }}
+              >
+                {/* Concentric Pulse Ring 1 */}
+                {!isOpeningAnimation && (
+                  <motion.div
+                    animate={{ scale: [1, 1.6], opacity: [0.8, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.8, ease: 'easeOut' }}
+                    style={{
+                      position: 'absolute',
+                      inset: '-4px',
+                      borderRadius: '9999px',
+                      border: '2px solid #d4af37',
+                      pointerEvents: 'none'
+                    }}
+                  />
+                )}
+
+                {/* Concentric Pulse Ring 2 */}
+                {!isOpeningAnimation && (
+                  <motion.div
+                    animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.8, delay: 0.4, ease: 'easeOut' }}
+                    style={{
+                      position: 'absolute',
+                      inset: '-4px',
+                      borderRadius: '9999px',
+                      border: '1.5px solid #ffe082',
+                      pointerEvents: 'none'
+                    }}
+                  />
+                )}
+
+                <div
+                  style={{
+                    width: '46px',
+                    height: '46px',
                     borderRadius: '9999px',
-                    backgroundColor: '#2b040a',
-                    border: '1px solid #d4af37',
+                    backgroundColor: '#a81c24',
+                    border: '1px solid #8B0000',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#d4af37'
+                    color: '#ffe082'
                   }}
                 >
-                  <Heart size={28} fill="#d4af37" />
+                  <Heart size={22} fill="#ffe082" />
                 </div>
-                <p style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em', color: '#d4af37', marginBottom: '8px' }}>
-                  Wedding Invitation
-                </p>
-                <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#ffe082', margin: '0 0 8px 0', fontFamily: 'serif' }}>
-                  Harsh &amp; Rutbi
-                </h1>
-                <p style={{ fontSize: '12px', color: '#fecdd3', letterSpacing: '0.1em', margin: 0 }}>
-                  DECEMBER 9, 2026
-                </p>
-              </div>
-
-              {/* Action Button */}
-              <button
-                onClick={handleOpenEnvelope}
-                style={{
-                  width: '100%',
-                  padding: '14px 0',
-                  backgroundColor: '#d4af37',
-                  color: '#2b040a',
-                  fontWeight: 'bold',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  border: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)'
-                }}
-              >
-                Unfold Invitation
-              </button>
+              </motion.div>
             </div>
           </motion.div>
         )}
