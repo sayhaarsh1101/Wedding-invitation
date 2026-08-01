@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,26 +10,27 @@
     padding: 0;
     width: 100%;
     min-height: 100vh;
-    background-color: #2b040a;
-    color: #fff8f0;
+    background-color: #fdf8f9;
+    color: #4a1525;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     overflow-x: hidden;
   }
 }
 
-/* Gold Text Accent */
+/* Gold Gradient Text Accent */
 .gold-text {
-  background: linear-gradient(135deg, #ffe082 0%, #d4af37 50%, #aa8321 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #aa8321 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Royal Card Box */
+/* Light Royal Card Box (Matches the reference video) */
 .royal-card {
-  background: rgba(43, 4, 10, 0.85);
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: #ffffff;
+  border: 1px solid #f2d6dc;
   border-radius: 1.25rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px rgba(164, 90, 106, 0.08);
 }
 
 @media (min-width: 640px) {
