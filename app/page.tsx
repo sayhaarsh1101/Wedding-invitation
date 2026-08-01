@@ -220,35 +220,6 @@ export default function WeddingInvitation() {
         </button>
       )}
 
-      {/* Floating Language Switcher */}
-      {isOpen && (
-        <button
-          onClick={() => setLang(lang === 'EN' ? 'UR' : 'EN')}
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            left: '20px',
-            zIndex: 60,
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            border: '1px solid #e5c5cc',
-            borderRadius: '20px',
-            padding: '6px 14px',
-            fontSize: '12px',
-            color: '#8c2d42',
-            fontWeight: '600',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            backdropFilter: 'blur(8px)',
-          }}
-        >
-          <Globe size={14} />
-          {lang === 'EN' ? 'Urdu' : 'English'}
-        </button>
-      )}
-
       {/* Envelope Overlay */}
       <AnimatePresence>
         {!isOpen && (
