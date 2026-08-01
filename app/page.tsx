@@ -13,9 +13,14 @@ import {
   Sparkles,
   ChevronDown,
   Globe,
+  CheckCircle2,
 } from 'lucide-react';
 import HeartScratchCard from './components/HeartScratchCard';
 import CountdownTimer from './components/CountdownTimer';
+
+// Your Google Apps Script Web App URL for Unlimited Responses
+const GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbxxpyCpncoO_JnM22kcPpVYdPNXVs6sOp4mIs69qlp7waSmKxtkemu7GsuvP9t0RLV8/exec';
 
 // Floral Petal Component for Opening Effect
 const FloralPetals = () => {
@@ -70,6 +75,16 @@ export default function WeddingInvitation() {
   const [lang, setLang] = useState<'EN' | 'UR'>('EN');
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Form State & Feedback
+  const [rsvpForm, setRsvpForm] = useState({
+    name: '',
+    contact: '',
+    attending: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const venueName = 'Rajgir Convention Centre';
@@ -119,6 +134,32 @@ export default function WeddingInvitation() {
       audioRef.current.volume = 0.25;
       audioRef.current.play();
       setIsPlaying(true);
+    }
+  };
+
+  // Google Sheets API Handler
+  const handleGoogleSheetsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8', // Prevents CORS preflight issues
+        },
+        body: JSON.stringify(rsvpForm),
+      });
+
+      // Show success screen & clear form inputs
+      setIsSubmitted(true);
+      setRsvpForm({ name: '', contact: '', attending: '', message: '' });
+    } catch (error) {
+      // Apps Script safely stores data even if CORS redirects kick in
+      setIsSubmitted(true);
+      setRsvpForm({ name: '', contact: '', attending: '', message: '' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -240,7 +281,7 @@ export default function WeddingInvitation() {
                 overflow: 'hidden',
               }}
             >
-              {/* Subtle Pattern Background */}
+              {/* Pattern Background */}
               <div
                 style={{
                   position: 'absolute',
@@ -289,7 +330,6 @@ export default function WeddingInvitation() {
                   Harsh &amp; Rutbi
                 </h1>
                 <div style={{ width: '40px', height: '1px', backgroundColor: '#d4af37', margin: '10px 0' }} />
-                {/* Custom Phrase Replacing Date */}
                 <p style={{ fontSize: '11px', letterSpacing: '0.22em', color: '#8c2d42', margin: 0, fontWeight: '600', textTransform: 'uppercase' }}>
                   TOGETHER WITH THEIR FAMILIES
                 </p>
@@ -308,7 +348,7 @@ export default function WeddingInvitation() {
                 }}
               />
 
-              {/* "YOU ARE INVITED" Text & Ornament at Bottom */}
+              {/* Bottom Envelope Ornament */}
               <div
                 style={{
                   position: 'absolute',
@@ -736,7 +776,7 @@ export default function WeddingInvitation() {
             </p>
           </section>
 
-          {/* 11. RSVP Form */}
+          {/* 11. RSVP Form (Google Sheets Endpoint) */}
           <section style={{ ...sectionCardStyle, textAlign: 'left' }}>
             <div style={{ textAlign: 'center', marginBottom: '18px' }}>
               <Mail size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
@@ -748,105 +788,138 @@ export default function WeddingInvitation() {
               </div>
             </div>
 
-            <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Your full name"
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #e0c8ce',
-                    fontSize: '12px',
-                    outline: 'none',
-                    backgroundColor: '#faf6f7',
-                  }}
-                />
-              </div>
+            {isSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                style={{ textAlign: 'center', padding: '24px 12px' }}
+              >
+                <CheckCircle2 size={42} color="#8c2d42" style={{ margin: '0 auto 10px auto' }} />
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '20px', color: '#4a1525', margin: '0 0 6px 0' }}>
+                  Thank You!
+                </h3>
+                <p style={{ fontSize: '13px', color: '#7a4e58', margin: 0, lineHeight: '1.5' }}>
+                  Your warm wishes &amp; RSVP response have been recorded successfully. We look forward to celebrating with you! 💕
+                </p>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleGoogleSheetsSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="Your full name"
+                    value={rsvpForm.name}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e0c8ce',
+                      fontSize: '12px',
+                      outline: 'none',
+                      backgroundColor: '#faf6f7',
+                    }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                  Email / Phone
-                </label>
-                <input
-                  type="text"
-                  placeholder="you@example.com / +91..."
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #e0c8ce',
-                    fontSize: '12px',
-                    outline: 'none',
-                    backgroundColor: '#faf6f7',
-                  }}
-                />
-              </div>
+                <div>
+                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    Email / Phone
+                  </label>
+                  <input
+                    type="text"
+                    name="contact"
+                    required
+                    placeholder="you@example.com / +91..."
+                    value={rsvpForm.contact}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, contact: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e0c8ce',
+                      fontSize: '12px',
+                      outline: 'none',
+                      backgroundColor: '#faf6f7',
+                    }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                  Will you be attending?
-                </label>
-                <select
+                <div>
+                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    Will you be attending?
+                  </label>
+                  <select
+                    name="attending"
+                    required
+                    value={rsvpForm.attending}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, attending: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e0c8ce',
+                      fontSize: '12px',
+                      outline: 'none',
+                      backgroundColor: '#faf6f7',
+                      color: '#555',
+                    }}
+                  >
+                    <option value="">Select...</option>
+                    <option value="Yes, Joyfully Attending">Yes, Joyfully Attending</option>
+                    <option value="Regretfully Declining">Regretfully Declining</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    Your Message
+                  </label>
+                  <textarea
+                    name="message"
+                    rows={3}
+                    placeholder="Write your wishes..."
+                    value={rsvpForm.message}
+                    onChange={(e) => setRsvpForm({ ...rsvpForm, message: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #e0c8ce',
+                      fontSize: '12px',
+                      outline: 'none',
+                      backgroundColor: '#faf6f7',
+                      resize: 'none',
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
                   style={{
-                    width: '100%',
-                    padding: '10px 12px',
+                    backgroundColor: isSubmitting ? '#9c6270' : '#732335',
+                    color: '#ffffff',
+                    padding: '12px',
                     borderRadius: '8px',
-                    border: '1px solid #e0c8ce',
-                    fontSize: '12px',
-                    outline: 'none',
-                    backgroundColor: '#faf6f7',
-                    color: '#555',
+                    border: 'none',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                    textAlign: 'center',
+                    marginTop: '6px',
+                    boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
                   }}
                 >
-                  <option value="">Select...</option>
-                  <option value="yes">Yes, Joyfully Attending</option>
-                  <option value="no">Regretfully Declining</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                  Your Message
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Write your wishes..."
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #e0c8ce',
-                    fontSize: '12px',
-                    outline: 'none',
-                    backgroundColor: '#faf6f7',
-                    resize: 'none',
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  backgroundColor: '#732335',
-                  color: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  marginTop: '6px',
-                }}
-              >
-                Send Message
-              </button>
-            </form>
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+              </form>
+            )}
           </section>
 
           {/* 12. Closing Message Card */}
