@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EnvelopeIntroProps {
+  onStartOpen?: () => void;
   onOpen: () => void;
 }
 
@@ -116,7 +117,7 @@ const SatinBow = ({ isOpened }: { isOpened: boolean }) => (
 /* ═══════════════════════════════════════════════════════════════════ */
 /*  MAIN: Luxury Wedding Envelope Intro                              */
 /* ═══════════════════════════════════════════════════════════════════ */
-export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
+export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
@@ -128,6 +129,9 @@ export default function EnvelopeIntro({ onOpen }: EnvelopeIntroProps) {
   const handleOpen = () => {
     if (isOpened) return;
     setIsOpened(true);
+    if (onStartOpen) {
+      onStartOpen();
+    }
     setTimeout(() => onOpen(), 2200);
   };
 

@@ -60,8 +60,7 @@ export default function WeddingInvitation() {
     }
   }, []);
 
-  const handleOpenComplete = async () => {
-    setIsOpen(true);
+  const handleStartOpen = async () => {
     if (audioRef.current) {
       try {
         audioRef.current.volume = 0.3;
@@ -71,6 +70,10 @@ export default function WeddingInvitation() {
         setIsPlaying(false);
       }
     }
+  };
+
+  const handleOpenComplete = () => {
+    setIsOpen(true);
   };
 
   const toggleAudio = () => {
@@ -143,7 +146,7 @@ export default function WeddingInvitation() {
       <audio ref={audioRef} loop preload="auto" src="/audio/wedding-music.mp3" />
 
       {/* Floating Audio Control Button */}
-      {isOpen && (
+      {(isOpen || isPlaying) && (
         <button
           onClick={toggleAudio}
           aria-label="Toggle Audio"
@@ -170,7 +173,12 @@ export default function WeddingInvitation() {
       )}
 
       {/* 1. LUXURY ENVELOPE INTRO SCENE */}
-      {!isOpen && <EnvelopeIntro onOpen={handleOpenComplete} />}
+      {!isOpen && (
+        <EnvelopeIntro
+          onStartOpen={handleStartOpen}
+          onOpen={handleOpenComplete}
+        />
+      )}
 
       {/* 2. MAIN INVITATION CONTENT (Rendered upon unsealing) */}
       {isOpen && (
