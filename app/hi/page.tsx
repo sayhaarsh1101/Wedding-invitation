@@ -19,16 +19,16 @@ import {
   MapPin,
   Calendar,
 } from 'lucide-react';
-import HeartScratchCard from './components/HeartScratchCard';
-import CountdownTimer from './components/CountdownTimer';
-import EnvelopeIntro from './components/EnvelopeIntro';
-import LanguageSwitch from './components/LanguageSwitch';
+import HeartScratchCard from '../components/HeartScratchCard';
+import CountdownTimer from '../components/CountdownTimer';
+import EnvelopeIntro from '../components/EnvelopeIntro';
+import LanguageSwitch from '../components/LanguageSwitch';
 
 // Google Apps Script Web App URL for RSVP Responses
 const GOOGLE_SCRIPT_URL =
   'https://script.google.com/macros/s/AKfycbxxpyCpncoO_JnM22kcPpVYdPNXVs6sOp4mIs69qlp7waSmKxtkemu7GsuvP9t0RLV8/exec';
 
-export default function WeddingInvitation() {
+export default function HindiWeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,33 +45,33 @@ export default function WeddingInvitation() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const venueName = 'Hotel Nalanda Regency';
-  const venueAddress = 'Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116';
+  const venueName = 'होटल नालंदा रीजेंसी';
+  const venueAddress = 'डांगी टोला, बस स्टैंड के समीप, एन.एच. 82, राजगीर, बिहार - 803116';
 
   const googleMapsDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${venueName}, ${venueAddress}`
+    'Hotel Nalanda Regency, Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116'
   )}`;
 
   const galleryImages = [
     {
       src: '/images/gallery-4.png',
-      title: 'Royal Togetherness',
-      desc: 'Harsh & Rutbi',
+      title: 'राजसी परिणय',
+      desc: 'हर्ष एवं रुतबी',
     },
     {
       src: '/images/gallery-3.jpg',
-      title: 'Forever & Always',
-      desc: 'Wrapped in love and warmth',
+      title: 'सदा के लिए हमसफ़र',
+      desc: 'प्रेम और विश्वास का पावन बंधन',
     },
     {
       src: '/images/gallery-2.jpg',
-      title: 'Hand in Hand',
-      desc: 'Walking through life together',
+      title: 'कदम से कदम',
+      desc: 'जीवन की हर डगर साथ-साथ',
     },
     {
       src: '/images/gallery-1.jpg',
-      title: 'Every Sweet Moment',
-      desc: 'Celebrating our joy',
+      title: 'खुशियों के पल',
+      desc: 'मधुर मुस्कान और उत्सव',
     },
   ];
 
@@ -104,7 +104,7 @@ export default function WeddingInvitation() {
         audioRef.current.volume = 0.3;
         await audioRef.current.play();
         setIsPlaying(true);
-      } catch (err) {
+      } catch {
         setIsPlaying(false);
       }
     }
@@ -126,7 +126,6 @@ export default function WeddingInvitation() {
     }
   };
 
-  // Google Sheets API Handler
   const handleGoogleSheetsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -134,49 +133,53 @@ export default function WeddingInvitation() {
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(rsvpForm),
+        body: JSON.stringify({
+          ...rsvpForm,
+          submittedAt: new Date().toISOString(),
+          language: 'hi',
+        }),
       });
 
       setIsSubmitted(true);
       setRsvpForm({ name: '', contact: '', attending: '', message: '' });
-    } catch (error) {
+    } catch {
       setIsSubmitted(true);
-      setRsvpForm({ name: '', contact: '', attending: '', message: '' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Luxury Card Styles
-  const sectionCardStyle: React.CSSProperties = {
+  // Reusable card styling matching English theme
+  const sectionCardStyle = {
     backgroundColor: '#ffffff',
-    borderRadius: '24px',
-    padding: '32px 22px',
-    marginBottom: '24px',
-    boxShadow: '0 10px 32px rgba(138, 43, 66, 0.07)',
-    border: '1px solid rgba(230, 210, 215, 0.7)',
-    textAlign: 'center',
-    color: '#4a232b',
+    borderRadius: '20px',
+    padding: '24px 20px',
+    marginBottom: '20px',
+    boxShadow: '0 8px 30px rgba(140, 45, 66, 0.08)',
+    border: '1px solid #e8cdd4',
+    textAlign: 'center' as const,
   };
 
-  const cursiveHeaderStyle: React.CSSProperties = {
-    fontFamily: "'Great Vibes', cursive",
-    fontSize: '34px',
+  const headerStyle = {
+    fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+    fontSize: '24px',
     color: '#8c2d42',
     margin: '0 0 6px 0',
-    fontWeight: 'normal',
+    fontWeight: '400',
+    letterSpacing: '0.02em',
   };
 
   return (
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#fbf4f6',
-        color: '#4a232b',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        background: 'linear-gradient(180deg, #2b040a 0%, #3d0711 15%, #f7eff1 45%, #fceef1 100%)',
+        color: '#4a1525',
+        fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
         position: 'relative',
         paddingBottom: '80px',
       }}
@@ -184,7 +187,7 @@ export default function WeddingInvitation() {
       <audio ref={audioRef} loop preload="auto" src="/audio/wedding-music.mp3" />
 
       {/* Floating Language Switcher */}
-      <LanguageSwitch currentLang="en" />
+      <LanguageSwitch currentLang="hi" />
 
       {/* Floating Audio Control Button */}
       {(isOpen || isPlaying) && (
@@ -213,19 +216,20 @@ export default function WeddingInvitation() {
         </button>
       )}
 
-      {/* 1. LUXURY ENVELOPE INTRO SCENE */}
+      {/* 1. LUXURY ENVELOPE INTRO SCENE (Hindi) */}
       {!isOpen && (
         <EnvelopeIntro
           onStartOpen={handleStartOpen}
           onOpen={handleOpenComplete}
+          lang="hi"
         />
       )}
 
-      {/* 2. MAIN INVITATION CONTENT (Rendered upon unsealing) */}
+      {/* 2. MAIN INVITATION CONTENT (Hindi) */}
       {isOpen && (
         <main style={{ maxWidth: '440px', margin: '0 auto', padding: '16px 16px 40px 16px' }}>
 
-          {/* Luxury Main Arched Invitation Card (Directly inspired by reference video) */}
+          {/* Luxury Main Arched Invitation Card */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -236,7 +240,7 @@ export default function WeddingInvitation() {
               backgroundColor: '#ffffff',
               border: '1.5px solid #e6c5cd',
               boxShadow: '0 16px 40px rgba(138, 43, 66, 0.12)',
-              padding: '24px 20px 24px 20px',
+              padding: '26px 20px 24px 20px',
               marginBottom: '24px',
               textAlign: 'center',
               overflow: 'hidden',
@@ -264,7 +268,7 @@ export default function WeddingInvitation() {
               />
             </div>
 
-            {/* Floral Arch Framing */}
+            {/* Top Floral Arch Header */}
             <div
               style={{
                 width: '100%',
@@ -273,153 +277,264 @@ export default function WeddingInvitation() {
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'top center',
-                mixBlendMode: 'multiply',
-                marginBottom: '2px',
-                position: 'relative',
-                zIndex: 2,
+                marginBottom: '10px',
+                borderRadius: '16px 16px 0 0',
               }}
             />
 
-            {/* Top Ornamental Crest */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', position: 'relative', zIndex: 2 }}>
-              <div
+            {/* Monogram Crest */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '54px',
+                height: '54px',
+                borderRadius: '50%',
+                border: '1.5px solid #d4af37',
+                margin: '0 auto 10px auto',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.25)',
+              }}
+            >
+              <span
                 style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  border: '1.5px solid #d4af37',
-                  backgroundColor: '#fffdf9',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(212, 175, 55, 0.2)',
-                  marginBottom: '10px',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: '22px',
-                    fontWeight: '700',
-                    color: '#8c2d42',
-                  }}
-                >
-                  H &amp; R
-                </span>
-              </div>
-
-              <p
-                style={{
-                  fontSize: '9px',
-                  letterSpacing: '0.28em',
+                  fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                  fontSize: '18px',
                   color: '#8c2d42',
-                  fontWeight: '700',
-                  textTransform: 'uppercase',
-                  margin: 0,
+                  fontWeight: '600',
                 }}
               >
-                Royal Wedding Invitation
-              </p>
+                ह &amp; रु
+              </span>
+            </div>
 
-              <div style={{ width: '40px', height: '1px', backgroundColor: '#d4af37', margin: '10px auto' }} />
+            {/* Ganesh Shloka */}
+            <p
+              style={{
+                fontSize: '12px',
+                color: '#8c2d42',
+                fontWeight: '700',
+                margin: '0 0 6px 0',
+                letterSpacing: '0.08em',
+              }}
+            >
+              ॥ श्री गणेशाय नमः ॥
+            </p>
 
+            {/* Sub-header */}
+            <h1
+              style={{
+                fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                fontSize: '24px',
+                color: '#732335',
+                margin: '0 0 8px 0',
+                fontWeight: '400',
+              }}
+            >
+              शुभ विवाह आमंत्रण
+            </h1>
+
+            {/* Decorative Gold Separator */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '8px 0 16px 0' }}>
+              <div style={{ width: '40px', height: '1px', backgroundColor: '#e2b4be' }} />
+              <span style={{ color: '#8c2d42', fontSize: '12px', margin: '0 8px' }}>♥</span>
+              <div style={{ width: '40px', height: '1px', backgroundColor: '#e2b4be' }} />
+            </div>
+
+            {/* Invitation Text */}
+            <p
+              style={{
+                fontSize: '12px',
+                lineHeight: '1.7',
+                color: '#6e3c48',
+                maxWidth: '320px',
+                margin: '0 auto 18px auto',
+              }}
+            >
+              परमपिता परमेश्वर के असीम अनुग्रह एवं पूज्य बुजुर्गों के शुभाशीर्वाद से हमारे इस पावन प्रसंग में आप सपरिवार सादर आमंत्रित हैं।
+            </p>
+
+            {/* Couple Names */}
+            <div style={{ margin: '14px 0 20px 0' }}>
+              <h2
+                style={{
+                  fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                  fontSize: '32px',
+                  color: '#8c2d42',
+                  margin: '0 0 4px 0',
+                  lineHeight: '1.2',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                हर्ष
+              </h2>
               <p
                 style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.12em',
-                  color: '#632533',
-                  textTransform: 'uppercase',
-                  fontWeight: '500',
-                  margin: '0 0 12px 0',
+                  fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                  fontSize: '18px',
+                  color: '#d4af37',
+                  margin: '2px 0',
+                  fontWeight: '600',
                 }}
               >
-                We request the pleasure of your company<br />to celebrate the wedding of
+                संग
               </p>
-
-              {/* Couple Names */}
-              <h1
+              <h2
                 style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  fontSize: '52px',
-                  color: '#7a2335',
-                  margin: '4px 0 12px 0',
-                  fontWeight: 'normal',
-                  lineHeight: '1.15',
+                  fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                  fontSize: '32px',
+                  color: '#8c2d42',
+                  margin: '4px 0 0 0',
+                  lineHeight: '1.2',
+                  letterSpacing: '0.02em',
                 }}
               >
-                Harsh &amp; Rutbi
-              </h1>
+                रुतबी
+              </h2>
+            </div>
 
-              {/* Interactive Gold Foil Date Reveal */}
-              <div style={{ width: '100%', margin: '14px 0 16px 0', display: 'flex', justifyContent: 'center' }}>
-                <HeartScratchCard
-                  dateText="WEDNESDAY, DEC 09, 2026"
-                  venueText="Hotel Nalanda Regency, Rajgir"
-                />
+            {/* ══ THE REAL SCRATCH CARD (Directly below couple names) ══ */}
+            <div style={{ margin: '18px 0 16px 0' }}>
+              <HeartScratchCard
+                dateText="बुधवार, 09 दिसम्बर 2026"
+                venueText="होटल नालंदा रीजेंसी, राजगीर"
+                coupleName="हर्ष संग रुतबी"
+                foilHeader="विवाह तिथि देखने के लिए स्क्रैच करें"
+                foilSubtitle="✦ अपनी उंगली या माउस से स्क्रैच करें ✦"
+                revealedPillText="✦ पावन विवाह तिथि ✦"
+                celebrateNote="आपकी गरिमामयी उपस्थिति प्रार्थनीय है 💕"
+                revealedStatusText="शुभ तिथि प्रकट! 🎉"
+                autoRevealText="तुरंत देखें ✨"
+                swipeToScratchText="स्क्रैच करें"
+              />
+            </div>
+
+            {/* Venue Location Text */}
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 245, 247, 0.85)',
+                border: '1px solid #f0d5db',
+                borderRadius: '16px',
+                padding: '16px',
+                margin: '18px 0 12px 0',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 4px 0' }}>
+                <MapPin size={18} color="#8c2d42" />
               </div>
-
-              {/* Venue Subtitle */}
-              <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.18em', color: '#8c2d42', fontWeight: '700', margin: '8px 0 4px 0' }}>
-                To Be Held At
-              </p>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '17px', color: '#4a1525', margin: '0 0 4px 0', fontWeight: '600' }}>
+              <p
+                style={{
+                  fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                  fontSize: '17px',
+                  color: '#4a1525',
+                  margin: '0 0 4px 0',
+                  fontWeight: '500',
+                }}
+              >
                 {venueName}
-              </h3>
-              <p style={{ fontSize: '11px', color: '#7a4e58', margin: '0 0 16px 0' }}>
+              </p>
+              <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: '0 0 12px 0', lineHeight: '1.5' }}>
                 {venueAddress}
               </p>
+              <a
+                href={googleMapsDirectionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  backgroundColor: '#732335',
+                  color: '#ffffff',
+                  padding: '8px 18px',
+                  borderRadius: '20px',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 12px rgba(115, 35, 53, 0.15)',
+                }}
+              >
+                गूगल मैप्स पर देखें ➔
+              </a>
             </div>
 
-            {/* Palace Garden Architectural Illustration */}
-            <div style={{ width: '100%', opacity: 0.45, marginTop: '8px' }}>
-              <svg viewBox="0 0 240 50" fill="none" stroke="#8c2d42" strokeWidth="1" style={{ width: '100%', height: '40px' }}>
-                <path d="M10 45 V 25 L 35 12 L 60 25 V 45 M 50 45 V 32 H 70 V 45 M 85 45 V 18 L 120 5 L 155 18 V 45 M 105 45 V 28 H 135 V 45 M 180 45 V 25 L 205 12 L 230 25 V 45" />
-                <circle cx="120" cy="5" r="3" fill="#8c2d42" />
-              </svg>
-            </div>
-
-            {/* Scroll Indicator */}
-            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.7 }}>
-              <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.25em', color: '#8c2d42' }}>
-                Scroll for Itinerary
-              </span>
-              <ChevronDown size={14} color="#8c2d42" className="animate-bounce mt-1" />
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '14px' }}>
+              <ChevronDown size={22} color="#8c2d42" className="animate-bounce" />
             </div>
           </motion.section>
 
-          {/* 3. Invitation Greeting Card */}
+          {/* 3. Shloka & Mangal Card */}
           <section style={sectionCardStyle}>
-            <p style={{ fontSize: '13px', lineHeight: '1.7', color: '#5c2c38', fontStyle: 'italic', margin: '0 0 10px 0' }}>
-              “With hearts full of joy, we invite you to share our special day as we exchange vows and begin our new chapter together.”
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 8px 0' }}>
+              <Sparkles size={20} color="#8c2d42" />
+            </div>
+            <p
+              style={{
+                fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                fontSize: '17px',
+                color: '#732335',
+                margin: '0 0 8px 0',
+                lineHeight: '1.6',
+              }}
+            >
+              “मंगलम् भगवान विष्णुः मंगलम् गरुड़ध्वजः।<br />मंगलम् पुण्डरीकाक्षः मंगलाय तनो हरिः॥”
             </p>
-            <p style={{ fontSize: '13px', lineHeight: '1.7', color: '#8c2d42', margin: 0, fontWeight: '600' }}>
-              We eagerly await your presence to grace this blessed celebration 💕
+            <p style={{ fontSize: '12px', color: '#683f49', margin: 0, lineHeight: '1.6' }}>
+              स्नेहिल परिणय सूत्र के इस पावन उत्सव में आपकी उपस्थिति हमारे लिए अत्यंत सौभाग्य और आनंद का विषय होगी 💕
             </p>
           </section>
 
-          {/* 4. Countdown Timer Card */}
+          {/* 4. Wedding Date Highlights Card */}
           <section style={sectionCardStyle}>
-            <h2 style={cursiveHeaderStyle}>Counting Down to Forever</h2>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 16px 0' }}>
+            <Calendar size={20} color="#8c2d42" style={{ margin: '0 auto 6px auto' }} />
+            <h2 style={headerStyle}>शुभ लग्न मुहूर्त</h2>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 14px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
             </div>
-            <CountdownTimer targetDate="2026-12-09T10:00:00" />
+
+            <p
+              style={{
+                fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                fontSize: '22px',
+                color: '#8c2d42',
+                margin: '0 0 4px 0',
+              }}
+            >
+              09 दिसम्बर 2026
+            </p>
+            <p style={{ fontSize: '13px', color: '#7a4e58', margin: '0 0 4px 0', fontWeight: '600' }}>
+              बुधवार • प्रातः 11:30 बजे
+            </p>
+            <p style={{ fontSize: '12px', color: '#683f49', margin: 0 }}>
+              होटल नालंदा रीजेंसी, राजगीर
+            </p>
+          </section>
+
+          {/* 5. Countdown to Forever */}
+          <section style={sectionCardStyle}>
+            <Clock size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
+            <h2 style={headerStyle}>शुभ घड़ी की प्रतीक्षा</h2>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 16px 0' }}>
+              <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
+              <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
+              <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
+            </div>
+            <CountdownTimer targetDate="2026-12-09T11:30:00" />
           </section>
 
           {/* 6. Photo Carousel Gallery */}
           <section style={{ ...sectionCardStyle, padding: '24px 18px' }}>
             <div style={{ textAlign: 'center', marginBottom: '16px' }}>
               <Camera size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-              <h2 style={cursiveHeaderStyle}>Moments of Love</h2>
+              <h2 style={headerStyle}>स्नेहिल स्मृतियां</h2>
               <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 10px 0' }}>
                 <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
                 <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
                 <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               </div>
-              <p style={{ fontSize: '11px', color: '#7a4e58', margin: 0, letterSpacing: '0.05em' }}>
-                Glimpses of our beautiful journey together
+              <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: 0 }}>
+                हमारे सुंदर सफर की कुछ खास झलकियां
               </p>
             </div>
 
@@ -480,9 +595,9 @@ export default function WeddingInvitation() {
                   >
                     <h3
                       style={{
-                        fontFamily: "'Playfair Display', serif",
-                        fontSize: '18px',
-                        fontWeight: '600',
+                        fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                        fontSize: '19px',
+                        fontWeight: '500',
                         color: '#ffd54f',
                         margin: '0 0 2px 0',
                       }}
@@ -495,7 +610,6 @@ export default function WeddingInvitation() {
                         color: '#f8bbd0',
                         margin: 0,
                         fontWeight: '400',
-                        letterSpacing: '0.05em',
                       }}
                     >
                       {galleryImages[currentSlide].desc}
@@ -528,7 +642,6 @@ export default function WeddingInvitation() {
                   cursor: 'pointer',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
                   zIndex: 10,
-                  transition: 'all 0.2s ease',
                 }}
               >
                 <ChevronLeft size={18} color="#732335" />
@@ -557,7 +670,6 @@ export default function WeddingInvitation() {
                   cursor: 'pointer',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
                   zIndex: 10,
-                  transition: 'all 0.2s ease',
                 }}
               >
                 <ChevronRight size={18} color="#732335" />
@@ -576,7 +688,6 @@ export default function WeddingInvitation() {
                   color: '#fff',
                   fontSize: '10px',
                   fontWeight: '600',
-                  letterSpacing: '0.1em',
                   zIndex: 10,
                 }}
               >
@@ -613,11 +724,11 @@ export default function WeddingInvitation() {
             </div>
           </section>
 
-          {/* 7. Program Timeline */}
+          {/* 7. Program Timeline (मांगलिक कार्यक्रम) */}
           <section style={{ ...sectionCardStyle, textAlign: 'left' }}>
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
               <Clock size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-              <h2 style={cursiveHeaderStyle}>The Celebrations</h2>
+              <h2 style={headerStyle}>मांगलिक कार्यक्रम</h2>
               <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0' }}>
                 <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
                 <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
@@ -627,20 +738,32 @@ export default function WeddingInvitation() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', paddingLeft: '8px' }}>
               {[
-                { title: 'Guest Arrival', date: 'Dec 9, 2026 • 10:00 AM', desc: 'Warm welcome of all guests with refreshments' },
-                { title: 'Wedding Ceremony', date: 'Dec 9, 2026 • 11:30 AM', desc: 'The auspicious wedding rituals & celebrations' },
-                { title: 'Grand Reception', date: 'Dec 10, 2026 • 7:00 PM', desc: 'Dinner, music, and celebratory banquet onwards' },
+                {
+                  title: 'अतिथि आगमन एवं स्वागत',
+                  date: '09 दिसम्बर 2026 • प्रातः 10:00 बजे',
+                  desc: 'सादर पधारे सभी अतिथियों का भावभीना स्वागत एवं अल्पाहार',
+                },
+                {
+                  title: 'शुभ विवाह संस्कार / पाणिग्रहण',
+                  date: '09 दिसम्बर 2026 • प्रातः 11:30 बजे',
+                  desc: 'वैदिक मंत्रोच्चार के बीच पावन वर-माला एवं फेरे',
+                },
+                {
+                  title: 'स्वागत समारोह एवं प्रीतिभोज',
+                  date: '10 दिसम्बर 2026 • सायं 7:00 बजे onwards',
+                  desc: 'संगीत, आनंद एवं भव्य रात्रिभोज',
+                },
               ].map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
                   <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#8c2d42', marginTop: '5px', flexShrink: 0 }} />
                   <div>
-                    <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', color: '#4a1525', margin: '0 0 2px 0', fontWeight: '600' }}>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '17px', color: '#4a1525', margin: '0 0 2px 0', fontWeight: '500' }}>
                       {item.title}
                     </h3>
                     <p style={{ fontSize: '12px', color: '#8c2d42', margin: '0 0 2px 0', fontWeight: '600' }}>
                       {item.date}
                     </p>
-                    <p style={{ fontSize: '12px', color: '#7a4e58', margin: 0 }}>
+                    <p style={{ fontSize: '12px', color: '#7a4e58', margin: 0, lineHeight: '1.5' }}>
                       {item.desc}
                     </p>
                   </div>
@@ -655,7 +778,7 @@ export default function WeddingInvitation() {
               <MapPin size={20} color="#8c2d42" />
             </div>
 
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '22px', color: '#4a1525', margin: '0 0 6px 0', fontWeight: '600' }}>
+            <h2 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '22px', color: '#4a1525', margin: '0 0 6px 0', fontWeight: '500' }}>
               {venueName}
             </h2>
             <p style={{ fontSize: '12px', color: '#7a4e58', margin: '0 0 18px 0', lineHeight: '1.5' }}>
@@ -678,14 +801,14 @@ export default function WeddingInvitation() {
                 boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
               }}
             >
-              View on Google Maps
+              गूगल मैप्स पर देखें ➔
             </a>
           </section>
 
           {/* 9. Dress Code */}
           <section style={sectionCardStyle}>
             <Shirt size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-            <h2 style={cursiveHeaderStyle}>Dress Code</h2>
+            <h2 style={headerStyle}>परिधान संहिता</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 18px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
@@ -693,28 +816,28 @@ export default function WeddingInvitation() {
             </div>
 
             <div style={{ marginBottom: '16px' }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', color: '#8c2d42', margin: '0 0 4px 0', fontWeight: '600' }}>
-                Ladies
+              <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '17px', color: '#8c2d42', margin: '0 0 4px 0', fontWeight: '500' }}>
+                महिलाओं के लिए
               </h3>
               <p style={{ fontSize: '12px', color: '#683f49', margin: 0 }}>
-                Traditional attire in pastel or festive royal colors
+                पारंपरिक भारतीय साड़ी, लहंगा या उत्सव परिधान
               </p>
             </div>
 
             <div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', color: '#8c2d42', margin: '0 0 4px 0', fontWeight: '600' }}>
-                Gentlemen
+              <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '17px', color: '#8c2d42', margin: '0 0 4px 0', fontWeight: '500' }}>
+                पुरुषों के लिए
               </h3>
               <p style={{ fontSize: '12px', color: '#683f49', margin: 0 }}>
-                Suits, Kurta Pajama, or traditional formal wear
+                कुर्ता-पायजामा, शेरवानी या फॉर्मल परिधान
               </p>
             </div>
           </section>
 
-          {/* 10. Pre-Wedding Events */}
+          {/* 10. Pre-Wedding Events (वैवाहिक पूर्व कार्यक्रम) */}
           <section style={sectionCardStyle}>
             <Sparkles size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-            <h2 style={cursiveHeaderStyle}>Pre-Wedding Events</h2>
+            <h2 style={headerStyle}>वैवाहिक पूर्व उत्सव</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 18px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
@@ -722,12 +845,12 @@ export default function WeddingInvitation() {
             </div>
 
             {[
-              { name: 'Mehendi', time: 'Dec 7, 2026 • 6:00 PM', place: 'Hotel Nalanda Regency, Rajgir' },
-              { name: 'Haldi', time: 'Dec 8, 2026 • 10:00 AM', place: 'Hotel Nalanda Regency, Rajgir' },
-              { name: 'Sangeet', time: 'Dec 8, 2026 • 7:00 PM', place: 'Hotel Nalanda Regency, Rajgir' },
+              { name: 'मेहंदी की रस्म', time: '07 दिसम्बर 2026 • सायं 6:00 बजे', place: 'होटल नालंदा रीजेंसी, राजगीर' },
+              { name: 'हल्दी उत्सव', time: '08 दिसम्बर 2026 • प्रातः 10:00 बजे', place: 'होटल नालंदा रीजेंसी, राजगीर' },
+              { name: 'संगीत संध्या', time: '08 दिसम्बर 2026 • सायं 7:00 बजे', place: 'होटल नालंदा रीजेंसी, राजगीर' },
             ].map((evt, idx) => (
               <div key={idx} style={{ marginBottom: idx === 2 ? '0' : '16px' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', color: '#4a1525', margin: '0 0 2px 0', fontWeight: '600' }}>
+                <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '17px', color: '#4a1525', margin: '0 0 2px 0', fontWeight: '500' }}>
                   {evt.name}
                 </h3>
                 <p style={{ fontSize: '12px', color: '#8c2d42', margin: '0 0 2px 0', fontWeight: '600' }}>
@@ -743,30 +866,30 @@ export default function WeddingInvitation() {
           {/* 11. Transportation & Accommodation */}
           <section style={sectionCardStyle}>
             <Car size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-            <h2 style={cursiveHeaderStyle}>Transportation</h2>
+            <h2 style={headerStyle}>परिवहन व्यवस्था</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 12px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
             </div>
             <p style={{ fontSize: '12px', color: '#683f49', margin: 0, lineHeight: '1.6' }}>
-              Convenient shuttle services will be available from Rajgir Railway Station &amp; Gaya Airport to the venue.
+              राजगीर रेलवे स्टेशन एवं गया एयरपोर्ट से विवाह स्थल तक विशेष वाहन सुविधा उपलब्ध रहेगी।
             </p>
           </section>
 
           <section style={sectionCardStyle}>
             <Building size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-            <h2 style={cursiveHeaderStyle}>Accommodation</h2>
+            <h2 style={headerStyle}>आवास व्यवस्था</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 12px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
             </div>
             <p style={{ fontSize: '12px', color: '#683f49', margin: '0 0 6px 0', lineHeight: '1.6' }}>
-              Special accommodation for all our esteemed guests has been arranged at <strong>Hotel Nalanda Regency</strong>.
+              हमारे सभी सम्मानीय अतिथियों के ठहरने की उत्तम व्यवस्था <strong>होटल नालंदा रीजेंसी</strong>, राजगीर में की गई है।
             </p>
-            <p style={{ fontSize: '11px', color: '#8c2d42', margin: 0 }}>
-              Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116
+            <p style={{ fontSize: '11.5px', color: '#8c2d42', margin: 0 }}>
+              डांगी टोला, बस स्टैंड के समीप, एन.एच. 82, राजगीर, बिहार - 803116
             </p>
           </section>
 
@@ -774,7 +897,7 @@ export default function WeddingInvitation() {
           <section style={{ ...sectionCardStyle, textAlign: 'left' }}>
             <div style={{ textAlign: 'center', marginBottom: '18px' }}>
               <Mail size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
-              <h2 style={cursiveHeaderStyle}>Send a Message</h2>
+              <h2 style={headerStyle}>शुभकामनाएं एवं उपस्थिति</h2>
               <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0' }}>
                 <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
                 <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
@@ -789,24 +912,24 @@ export default function WeddingInvitation() {
                 style={{ textAlign: 'center', padding: '24px 12px' }}
               >
                 <CheckCircle2 size={42} color="#8c2d42" style={{ margin: '0 auto 10px auto' }} />
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '20px', color: '#4a1525', margin: '0 0 6px 0' }}>
-                  Thank You!
+                <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '20px', color: '#4a1525', margin: '0 0 6px 0' }}>
+                  हार्दिक धन्यवाद!
                 </h3>
                 <p style={{ fontSize: '13px', color: '#7a4e58', margin: 0, lineHeight: '1.5' }}>
-                  Your warm wishes &amp; RSVP response have been recorded successfully. We look forward to celebrating with you! 💕
+                  आपका स्नेह संदेश एवं उत्तर सफलतापूर्वक दर्ज हो गया है। हम आपके आगमन की प्रतीक्षा में हैं! 💕
                 </p>
               </motion.div>
             ) : (
               <form onSubmit={handleGoogleSheetsSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
-                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    Your Name
+                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    आपका शुभ नाम *
                   </label>
                   <input
                     type="text"
                     name="name"
                     required
-                    placeholder="Your full name"
+                    placeholder="पूरा नाम दर्ज करें"
                     value={rsvpForm.name}
                     onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
                     style={{
@@ -816,20 +939,20 @@ export default function WeddingInvitation() {
                       border: '1px solid #e0c8ce',
                       fontSize: '12px',
                       outline: 'none',
-                      backgroundColor: '#faf6f7',
+                      backgroundColor: '#fffcfd',
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    Email / Phone
+                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    संपर्क सूत्र / मोबाइल नंबर *
                   </label>
                   <input
                     type="text"
                     name="contact"
                     required
-                    placeholder="you@example.com / +91..."
+                    placeholder="मोबाइल नंबर"
                     value={rsvpForm.contact}
                     onChange={(e) => setRsvpForm({ ...rsvpForm, contact: e.target.value })}
                     style={{
@@ -839,14 +962,14 @@ export default function WeddingInvitation() {
                       border: '1px solid #e0c8ce',
                       fontSize: '12px',
                       outline: 'none',
-                      backgroundColor: '#faf6f7',
+                      backgroundColor: '#fffcfd',
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    Will you be attending?
+                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    क्या आप सम्मिलित हो रहे हैं? *
                   </label>
                   <select
                     name="attending"
@@ -860,24 +983,25 @@ export default function WeddingInvitation() {
                       border: '1px solid #e0c8ce',
                       fontSize: '12px',
                       outline: 'none',
-                      backgroundColor: '#faf6f7',
-                      color: '#555',
+                      backgroundColor: '#fffcfd',
+                      color: '#4a1525',
                     }}
                   >
-                    <option value="">Select...</option>
-                    <option value="Yes, Joyfully Attending">Yes, Joyfully Attending</option>
-                    <option value="Regretfully Declining">Regretfully Declining</option>
+                    <option value="">विकल्प चुनें</option>
+                    <option value="हाँ, सपरिवार अवश्य सम्मिलित होंगे">हाँ, सपरिवार अवश्य सम्मिलित होंगे</option>
+                    <option value="शायद / विचार कर रहे हैं">शायद / विचार कर रहे हैं</option>
+                    <option value="क्षमा करें, सम्मिलित नहीं हो सकेंगे">क्षमा करें, सम्मिलित नहीं हो सकेंगे</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '11px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    Your Message
+                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
+                    वर-वधू के लिए मंगल संदेश
                   </label>
                   <textarea
                     name="message"
                     rows={3}
-                    placeholder="Write your wishes..."
+                    placeholder="अपनी मंगलकामनाएं लिखें..."
                     value={rsvpForm.message}
                     onChange={(e) => setRsvpForm({ ...rsvpForm, message: e.target.value })}
                     style={{
@@ -887,7 +1011,7 @@ export default function WeddingInvitation() {
                       border: '1px solid #e0c8ce',
                       fontSize: '12px',
                       outline: 'none',
-                      backgroundColor: '#faf6f7',
+                      backgroundColor: '#fffcfd',
                       resize: 'none',
                     }}
                   />
@@ -897,7 +1021,7 @@ export default function WeddingInvitation() {
                   type="submit"
                   disabled={isSubmitting}
                   style={{
-                    backgroundColor: isSubmitting ? '#9c6270' : '#732335',
+                    backgroundColor: '#8c2d42',
                     color: '#ffffff',
                     padding: '12px',
                     borderRadius: '8px',
@@ -905,39 +1029,47 @@ export default function WeddingInvitation() {
                     fontSize: '13px',
                     fontWeight: '600',
                     cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    textAlign: 'center',
+                    boxShadow: '0 4px 15px rgba(140, 45, 66, 0.25)',
                     marginTop: '6px',
-                    boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
+                    opacity: isSubmitting ? 0.7 : 1,
                   }}
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                  {isSubmitting ? 'संदेश भेजा जा रहा है...' : 'संदेश भेजें 💌'}
                 </button>
               </form>
             )}
           </section>
 
-          {/* 13. Closing Card */}
-          <section style={{ ...sectionCardStyle, padding: '36px 20px' }}>
-            <div style={{ opacity: 0.3, marginBottom: '10px' }}>
-              <svg width="100%" height="16" viewBox="0 0 300 16" fill="none" stroke="#8c2d42" strokeWidth="1">
-                <path d="M0 8 Q 75 0, 150 8 T 300 8" />
-              </svg>
-            </div>
-
-            <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: '32px', color: '#8c2d42', margin: '0 0 10px 0' }}>
-              We can't wait to celebrate with you!
+          {/* 13. Blessing Closing Plaque */}
+          <section style={{ ...sectionCardStyle, backgroundColor: '#8c2d42', color: '#ffffff', border: 'none' }}>
+            <h2
+              style={{
+                fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                fontSize: '22px',
+                color: '#ffd54f',
+                margin: '0 0 6px 0',
+              }}
+            >
+              दर्शनाभिलाषी एवं स्वागताकांक्षी
+            </h2>
+            <p style={{ fontSize: '12px', color: '#fceef1', margin: '0 0 12px 0', lineHeight: '1.6' }}>
+              समस्त परिजन एवं रिश्तेदार
             </p>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '18px', color: '#5a2532', margin: 0 }}>
-              Harsh &amp; Rutbi
+            <div style={{ width: '40px', height: '1px', backgroundColor: '#ffd54f', margin: '0 auto 12px auto' }} />
+            <p style={{ fontSize: '11px', color: '#f8bbd0', margin: 0, letterSpacing: '0.05em' }}>
+              हर्ष एवं रुतबी के शुभ विवाह में आपका हार्दिक अभिनंदन
             </p>
-
-            <div style={{ opacity: 0.3, marginTop: '14px' }}>
-              <svg width="100%" height="16" viewBox="0 0 300 16" fill="none" stroke="#8c2d42" strokeWidth="1">
-                <path d="M0 8 Q 75 16, 150 8 T 300 8" />
-              </svg>
-            </div>
           </section>
 
+          {/* 14. Footer Copyright / Watermark */}
+          <footer style={{ textAlign: 'center', padding: '16px 0', color: '#a6727d', fontSize: '11px' }}>
+            <p style={{ margin: '0 0 4px 0' }}>
+              हर्ष संग रुतबी • 09 दिसम्बर 2026
+            </p>
+            <p style={{ margin: 0, fontSize: '10px', opacity: 0.8 }}>
+              With Love &amp; Blessings
+            </p>
+          </footer>
         </main>
       )}
     </div>

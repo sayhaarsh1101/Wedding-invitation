@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface EnvelopeIntroProps {
   onStartOpen?: () => void;
   onOpen: () => void;
+  lang?: 'en' | 'hi';
 }
 
 /* ─── Floating 3D Rose Petals ─────────────────────────────────────── */
@@ -60,7 +61,7 @@ const FloatingPetals = () => {
 };
 
 /* ─── "YOU ARE INVITED" Royal Plaque ──────────────────────────────── */
-const InvitedBadge = ({ isOpening }: { isOpening: boolean }) => (
+const InvitedBadge = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: 'en' | 'hi' }) => (
   <motion.div
     initial={{ opacity: 0, y: -10, x: '-50%', scale: 0.9 }}
     animate={{
@@ -85,41 +86,71 @@ const InvitedBadge = ({ isOpening }: { isOpening: boolean }) => (
         background: 'linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(255,248,242,0.9) 100%)',
         border: '1.5px solid rgba(212, 175, 55, 0.75)',
         borderRadius: '26px',
-        padding: '7px 24px 9px',
+        padding: lang === 'hi' ? '8px 22px' : '7px 24px 9px',
         boxShadow: '0 8px 25px rgba(120, 40, 60, 0.22), inset 0 1px 2px rgba(255,255,255,0.95)',
         backdropFilter: 'blur(8px)',
       }}
     >
-      <p
-        style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: '9.5px',
-          letterSpacing: '0.3em',
-          fontWeight: '700',
-          color: '#8c2d42',
-          margin: '0 0 2px 0',
-          textTransform: 'uppercase',
-        }}
-      >
-        You Are
-      </p>
-      <p
-        style={{
-          fontFamily: "'Great Vibes', cursive",
-          fontSize: '26px',
-          color: '#7a2335',
-          margin: 0,
-          lineHeight: '1.05',
-        }}
-      >
-        Invited
-      </p>
+      {lang === 'hi' ? (
+        <>
+          <p
+            style={{
+              fontFamily: "'Noto Serif Devanagari', serif",
+              fontSize: '11px',
+              letterSpacing: '0.15em',
+              fontWeight: '700',
+              color: '#8c2d42',
+              margin: '0 0 2px 0',
+            }}
+          >
+            ॥ श्री गणेशाय नमः ॥
+          </p>
+          <p
+            style={{
+              fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+              fontSize: '20px',
+              color: '#7a2335',
+              margin: 0,
+              lineHeight: '1.1',
+            }}
+          >
+            सादर निमंत्रण
+          </p>
+        </>
+      ) : (
+        <>
+          <p
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '9.5px',
+              letterSpacing: '0.3em',
+              fontWeight: '700',
+              color: '#8c2d42',
+              margin: '0 0 2px 0',
+              textTransform: 'uppercase',
+            }}
+          >
+            You Are
+          </p>
+          <p
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              fontSize: '26px',
+              color: '#7a2335',
+              margin: 0,
+              lineHeight: '1.05',
+            }}
+          >
+            Invited
+          </p>
+        </>
+      )}
     </div>
   </motion.div>
 );
 
 /* ─── "With the blessings..." Calligraphy ─────────────────────────── */
-const BlessingsText = ({ isOpening }: { isOpening: boolean }) => (
+const BlessingsText = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: 'en' | 'hi' }) => (
   <motion.div
     initial={{ opacity: 0, y: 10, x: '-50%' }}
     animate={{
@@ -140,14 +171,17 @@ const BlessingsText = ({ isOpening }: { isOpening: boolean }) => (
   >
     <p
       style={{
-        fontFamily: "'Great Vibes', cursive",
-        fontSize: '19px',
+        fontFamily: lang === 'hi' ? "'Noto Serif Devanagari', serif" : "'Great Vibes', cursive",
+        fontSize: lang === 'hi' ? '14px' : '19px',
         color: '#ffffff',
         margin: 0,
         textShadow: '0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0,0,0,0.7)',
+        letterSpacing: lang === 'hi' ? '0.04em' : 'normal',
       }}
     >
-      With the blessings of our families
+      {lang === 'hi'
+        ? '“परमपिता परमेश्वर एवं हमारे परिजनों के आशीर्वाद से”'
+        : 'With the blessings of our families'}
     </p>
   </motion.div>
 );
@@ -155,7 +189,7 @@ const BlessingsText = ({ isOpening }: { isOpening: boolean }) => (
 /* ═══════════════════════════════════════════════════════════════════ */
 /*  MAIN: Royal Palace 3D Gate Cinematic Intro                        */
 /* ═══════════════════════════════════════════════════════════════════ */
-export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProps) {
+export default function EnvelopeIntro({ onStartOpen, onOpen, lang = 'en' }: EnvelopeIntroProps) {
   const [phase, setPhase] = useState<'idle' | 'opening' | 'glowOut' | 'done'>('idle');
   const [showHint, setShowHint] = useState(false);
 
@@ -390,7 +424,7 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           />
 
           {/* ══ LAYER 4: "YOU ARE INVITED" BADGE ══ */}
-          <InvitedBadge isOpening={isOpening} />
+          <InvitedBadge isOpening={isOpening} lang={lang} />
 
           {/* ══ LAYER 5: COUPLE ILLUSTRATION (STATIC IN FOREGROUND) ══ */}
           <motion.div
@@ -451,7 +485,7 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           </motion.div>
 
           {/* ══ LAYER 6: BLESSINGS TEXT ══ */}
-          <BlessingsText isOpening={isOpening} />
+          <BlessingsText isOpening={isOpening} lang={lang} />
 
           {/* ══ LAYER 7: INTERACTIVE "TAP TO OPEN" BUTTON ══ */}
           <AnimatePresence>
@@ -498,11 +532,11 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
                     border: '1.5px solid rgba(255, 255, 255, 0.85)',
                     background: 'linear-gradient(135deg, #d4af37 0%, #f7df87 50%, #c9a024 100%)',
                     color: '#4a1525',
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: '13px',
+                    fontFamily: lang === 'hi' ? "'Noto Serif Devanagari', serif" : "'Playfair Display', serif",
+                    fontSize: lang === 'hi' ? '14px' : '13px',
                     fontWeight: '700',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
+                    letterSpacing: lang === 'hi' ? '0.08em' : '0.18em',
+                    textTransform: lang === 'hi' ? 'none' : 'uppercase',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -510,7 +544,7 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
                     gap: '8px',
                   }}
                 >
-                  <span>✦ Tap to Open ✦</span>
+                  <span>{lang === 'hi' ? '✦ निमंत्रण पत्र खोलें ✦' : '✦ Tap to Open ✦'}</span>
                 </motion.button>
               </motion.div>
             )}

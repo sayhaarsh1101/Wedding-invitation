@@ -8,6 +8,14 @@ import { Sparkles, CheckCircle2 } from 'lucide-react';
 interface HeartScratchCardProps {
   dateText?: string;
   venueText?: string;
+  coupleName?: string;
+  foilHeader?: string;
+  foilSubtitle?: string;
+  revealedPillText?: string;
+  celebrateNote?: string;
+  revealedStatusText?: string;
+  autoRevealText?: string;
+  swipeToScratchText?: string;
 }
 
 interface Particle {
@@ -23,6 +31,14 @@ interface Particle {
 export default function HeartScratchCard({
   dateText = 'DECEMBER 09, 2026',
   venueText = 'Hotel Nalanda Regency, Rajgir',
+  coupleName = 'Harsh & Rutbi',
+  foilHeader = 'SCRATCH TO REVEAL DATE',
+  foilSubtitle = '✦ USE YOUR FINGER OR MOUSE ✦',
+  revealedPillText = '✦ Sacred Date Revealed ✦',
+  celebrateNote = 'We cannot wait to celebrate with you!',
+  revealedStatusText = 'Date Revealed! 🎉',
+  autoRevealText = 'Auto Reveal ✨',
+  swipeToScratchText = 'Swipe to scratch',
 }: HeartScratchCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -112,18 +128,18 @@ export default function HeartScratchCard({
     ctx.textBaseline = 'middle';
     ctx.fillText('✨', width / 2, height / 2 - 22);
 
-    // Foil Header Calligraphy
-    ctx.font = 'bold 13px "Playfair Display", Georgia, serif';
-    ctx.letterSpacing = '2px';
+    // Foil Header Typography
+    ctx.font = 'bold 12px "Playfair Display", "Noto Serif Devanagari", Georgia, serif';
+    ctx.letterSpacing = '1.5px';
     ctx.fillStyle = '#4a3002';
-    ctx.fillText('SCRATCH TO REVEAL DATE', width / 2, height / 2 + 6);
+    ctx.fillText(foilHeader, width / 2, height / 2 + 6);
 
     // Foil Subtitle
-    ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
-    ctx.letterSpacing = '1.5px';
+    ctx.font = '500 10px "Plus Jakarta Sans", "Noto Serif Devanagari", sans-serif';
+    ctx.letterSpacing = '1.2px';
     ctx.fillStyle = '#6b4c05';
-    ctx.fillText('✦ USE YOUR FINGER OR MOUSE ✦', width / 2, height / 2 + 28);
-  }, []);
+    ctx.fillText(foilSubtitle, width / 2, height / 2 + 28);
+  }, [foilHeader, foilSubtitle]);
 
   useEffect(() => {
     initCanvas();
@@ -310,33 +326,34 @@ export default function HeartScratchCard({
                 color: '#f9e8a2',
                 fontWeight: '700',
                 textTransform: 'uppercase',
+                fontFamily: "'Playfair Display', 'Noto Serif Devanagari', serif",
               }}
             >
-              ✦ Sacred Date Revealed ✦
+              {revealedPillText}
             </span>
           </motion.div>
 
           {/* Couple Names Script */}
           <p
             style={{
-              fontFamily: "'Great Vibes', cursive",
-              fontSize: '26px',
+              fontFamily: "'Rozha One', 'Noto Serif Devanagari', 'Great Vibes', cursive",
+              fontSize: '24px',
               color: '#ffd54f',
               margin: '0 0 2px 0',
-              lineHeight: '1.1',
+              lineHeight: '1.2',
               textShadow: '0 2px 8px rgba(0,0,0,0.5)',
             }}
           >
-            Harsh &amp; Rutbi
+            {coupleName}
           </p>
 
           {/* Big Date Text */}
           <p
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '22px',
+              fontFamily: "'Playfair Display', 'Noto Serif Devanagari', serif",
+              fontSize: '20px',
               fontWeight: '700',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.05em',
               background: 'linear-gradient(180deg, #ffffff 0%, #ffe082 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -350,10 +367,11 @@ export default function HeartScratchCard({
           <p
             style={{
               fontSize: '11px',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.05em',
               color: '#f8bbd0',
               margin: 0,
               fontWeight: '500',
+              fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
             }}
           >
             📍 {venueText}
@@ -362,8 +380,15 @@ export default function HeartScratchCard({
           {/* Heart icon indicator */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
             <span style={{ color: '#d4af37', fontSize: '10px' }}>✦</span>
-            <span style={{ fontSize: '10px', color: '#ffcdd2', fontStyle: 'italic' }}>
-              We cannot wait to celebrate with you!
+            <span
+              style={{
+                fontSize: '10px',
+                color: '#ffcdd2',
+                fontStyle: 'italic',
+                fontFamily: "'Noto Serif Devanagari', sans-serif",
+              }}
+            >
+              {celebrateNote}
             </span>
             <span style={{ color: '#d4af37', fontSize: '10px' }}>✦</span>
           </div>
@@ -453,17 +478,18 @@ export default function HeartScratchCard({
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
+            fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
           }}
         >
           {isRevealed ? (
             <>
               <CheckCircle2 size={13} color="#2e7d32" />
-              <span>Date Revealed! 🎉</span>
+              <span>{revealedStatusText}</span>
             </>
           ) : (
             <>
               <Sparkles size={12} color="#d4af37" />
-              <span>{scratchPercent > 0 ? `${scratchPercent}% scratched` : 'Swipe to scratch'}</span>
+              <span>{scratchPercent > 0 ? `${scratchPercent}%` : swipeToScratchText}</span>
             </>
           )}
         </span>
@@ -480,9 +506,10 @@ export default function HeartScratchCard({
               textDecoration: 'underline',
               cursor: 'pointer',
               padding: '2px 6px',
+              fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
             }}
           >
-            Auto Reveal ✨
+            {autoRevealText}
           </button>
         )}
       </div>
