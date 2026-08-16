@@ -8,19 +8,19 @@ interface EnvelopeIntroProps {
   onOpen: () => void;
 }
 
-/* ─── Floating Rose Petals ────────────────────────────────────────── */
+/* ─── Floating 3D Rose Petals ─────────────────────────────────────── */
 const FloatingPetals = () => {
   const petals = useMemo(() => {
-    return Array.from({ length: 24 }, (_, i) => {
-      const angle = (i / 24) * 360;
-      const radius = 90 + (i % 5) * 45;
+    return Array.from({ length: 30 }, (_, i) => {
+      const angle = (i / 30) * 360;
+      const radius = 90 + (i % 6) * 45;
       return {
         id: i,
         x: Math.cos((angle * Math.PI) / 180) * radius,
-        y: Math.sin((angle * Math.PI) / 180) * radius - 30,
-        size: 7 + (i % 4) * 4,
-        rotation: (i * 37) % 360,
-        delay: (i % 6) * 0.06,
+        y: Math.sin((angle * Math.PI) / 180) * radius - 40,
+        size: 6 + (i % 4) * 3.5,
+        rotation: (i * 47) % 360,
+        delay: (i % 8) * 0.05,
       };
     });
   }, []);
@@ -32,14 +32,14 @@ const FloatingPetals = () => {
           key={p.id}
           initial={{ opacity: 0, scale: 0, x: 0, y: 0, rotate: 0 }}
           animate={{
-            opacity: [0, 0.85, 0],
-            scale: [0.4, 1.15, 0.5],
+            opacity: [0, 0.9, 0],
+            scale: [0.3, 1.25, 0.4],
             x: p.x,
             y: p.y,
-            rotate: p.rotation + 180,
+            rotate: p.rotation + 240,
           }}
           transition={{
-            duration: 2.2,
+            duration: 2.8,
             delay: 0.1 + p.delay,
             ease: [0.25, 1, 0.5, 1],
           }}
@@ -51,7 +51,7 @@ const FloatingPetals = () => {
             height: `${p.size * 1.35}px`,
             background: 'radial-gradient(circle at 30% 30%, #ffffff 0%, #fce4ec 35%, #f48fb1 70%, #d81b60 100%)',
             borderRadius: '50% 0% 50% 50%',
-            boxShadow: '0 3px 10px rgba(216, 27, 96, 0.28)',
+            boxShadow: '0 3px 10px rgba(216, 27, 96, 0.3)',
           }}
         />
       ))}
@@ -59,20 +59,20 @@ const FloatingPetals = () => {
   );
 };
 
-/* ─── "YOU ARE INVITED" Royal Badge ───────────────────────────────── */
+/* ─── "YOU ARE INVITED" Royal Plaque ──────────────────────────────── */
 const InvitedBadge = ({ isOpening }: { isOpening: boolean }) => (
   <motion.div
     initial={{ opacity: 0, y: -10, x: '-50%', scale: 0.9 }}
     animate={{
-      opacity: isOpening ? 0.35 : 1,
-      y: isOpening ? -20 : 0,
+      opacity: isOpening ? 0.2 : 1,
+      y: isOpening ? -35 : 0,
       x: '-50%',
-      scale: isOpening ? 0.92 : 1,
+      scale: isOpening ? 0.85 : 1,
     }}
-    transition={{ duration: 0.8, ease: 'easeOut' }}
+    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
     style={{
       position: 'absolute',
-      top: '12%',
+      top: '11%',
       left: '50%',
       zIndex: 25,
       textAlign: 'center',
@@ -130,7 +130,7 @@ const BlessingsText = ({ isOpening }: { isOpening: boolean }) => (
     transition={{ duration: 0.4 }}
     style={{
       position: 'absolute',
-      bottom: '11.5%',
+      bottom: '11%',
       left: '50%',
       zIndex: 25,
       textAlign: 'center',
@@ -153,55 +153,48 @@ const BlessingsText = ({ isOpening }: { isOpening: boolean }) => (
 );
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*  MAIN: Royal Palace Door Intro Scene                              */
+/*  MAIN: Royal Palace 3D Gate Cinematic Intro                        */
 /* ═══════════════════════════════════════════════════════════════════ */
 export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProps) {
-  // State: 'idle' -> 'opening' -> 'walking' -> 'glowOut' -> 'done'
-  const [phase, setPhase] = useState<'idle' | 'opening' | 'walking' | 'glowOut' | 'done'>('idle');
+  const [phase, setPhase] = useState<'idle' | 'opening' | 'glowOut' | 'done'>('idle');
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowHint(true), 500);
+    const timer = setTimeout(() => setShowHint(true), 400);
     return () => clearTimeout(timer);
   }, []);
 
   const handleOpenDoors = useCallback(() => {
     if (phase !== 'idle') return;
 
-    // Start music immediately on tap
+    // Trigger audio immediately on user click
     if (onStartOpen) {
       onStartOpen();
     }
 
     setPhase('opening');
 
-    // Couple starts stepping forward through open doors
-    setTimeout(() => {
-      setPhase('walking');
-    }, 900);
-
-    // Warm golden flash bloom transition
+    // Warm golden bloom transition after doors open and petals burst
     setTimeout(() => {
       setPhase('glowOut');
-    }, 4000);
+    }, 3200);
 
-    // Complete transition to main invitation card
+    // Transition to main invitation
     setTimeout(() => {
       setPhase('done');
       onOpen();
-    }, 5100);
+    }, 4200);
   }, [phase, onStartOpen, onOpen]);
 
   if (phase === 'done') return null;
 
   const isOpening = phase !== 'idle';
-  const isWalking = phase === 'walking' || phase === 'glowOut';
   const isGlowingOut = phase === 'glowOut';
 
   return (
     <AnimatePresence>
       <motion.div
-        key="royal-door-intro-scene"
+        key="cinematic-palace-3d-gate"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
@@ -215,10 +208,10 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           justifyContent: 'center',
           overflow: 'hidden',
           cursor: phase === 'idle' ? 'pointer' : 'default',
-          background: '#0d0205',
+          background: '#0a0104',
         }}
       >
-        {/* ── Responsive Frame Container (Centers on any screen) ── */}
+        {/* ── Responsive 3D Viewport ── */}
         <div
           style={{
             position: 'relative',
@@ -227,23 +220,26 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
             height: '100%',
             maxHeight: '100vh',
             overflow: 'hidden',
-            boxShadow: '0 0 60px rgba(0,0,0,0.85)',
-            perspective: '1400px',
+            boxShadow: '0 0 60px rgba(0,0,0,0.9)',
+            perspective: '1800px',
+            transformStyle: 'preserve-3d',
           }}
         >
-          {/* ══ LAYER 1: PALACE COURTYARD BACKDROP (Inside the Doors) ══ */}
+          {/* ══ LAYER 1: 3D PARALLAX CAMERA ZOOM (PALACE COURTYARD) ══ */}
           <motion.div
             animate={{
-              scale: isGlowingOut ? 1.25 : isOpening ? 1.08 : 1,
+              scale: isGlowingOut ? 1.35 : isOpening ? 1.18 : 1,
+              y: isOpening ? -24 : 0,
             }}
             transition={{
-              duration: isGlowingOut ? 1.2 : 4.5,
+              duration: isGlowingOut ? 1.1 : 4.4,
               ease: [0.22, 1, 0.36, 1],
             }}
             style={{
               position: 'absolute',
               inset: 0,
               zIndex: 2,
+              transformOrigin: 'center 40%',
             }}
           >
             <img
@@ -256,35 +252,35 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
                 objectPosition: 'center center',
               }}
             />
-            {/* Soft ambient lighting */}
+            {/* Soft dreamy ambient light */}
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(180deg, rgba(255,220,230,0.12) 0%, rgba(255,210,160,0.08) 60%, rgba(0,0,0,0.3) 100%)',
+                background: 'linear-gradient(180deg, rgba(255,220,230,0.12) 0%, rgba(255,210,160,0.08) 60%, rgba(0,0,0,0.25) 100%)',
               }}
             />
           </motion.div>
 
-          {/* ══ LAYER 2: GLOWING LIGHT RAYS FROM DOORWAY ══ */}
+          {/* ══ LAYER 2: GLOWING SUNBURST LIGHT FROM DOORWAY ARCH ══ */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.6 }}
+            initial={{ opacity: 0, scale: 0.5 }}
             animate={{
-              opacity: isGlowingOut ? 1 : isOpening ? 0.8 : 0,
-              scale: isGlowingOut ? 3.5 : isOpening ? 1.4 : 0.6,
+              opacity: isGlowingOut ? 1 : isOpening ? 0.9 : 0,
+              scale: isGlowingOut ? 4 : isOpening ? 1.6 : 0.5,
             }}
             transition={{
-              duration: isGlowingOut ? 1.2 : 2.5,
+              duration: isGlowingOut ? 1.1 : 2.6,
               ease: [0.22, 1, 0.36, 1],
             }}
             style={{
               position: 'absolute',
-              top: '42%',
+              top: '40%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
               width: '280px',
               height: '380px',
-              background: 'radial-gradient(ellipse at center, rgba(255,248,220,0.95) 0%, rgba(255,215,140,0.6) 30%, rgba(255,180,90,0.2) 60%, transparent 75%)',
+              background: 'radial-gradient(ellipse at center, rgba(255,248,220,0.98) 0%, rgba(255,215,140,0.65) 30%, rgba(255,180,90,0.25) 60%, transparent 75%)',
               borderRadius: '50%',
               zIndex: 4,
               pointerEvents: 'none',
@@ -296,11 +292,11 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           <motion.div
             initial={{ rotateY: 0, x: 0 }}
             animate={{
-              rotateY: isOpening ? -85 : 0,
-              x: isOpening ? '-95%' : '0%',
+              rotateY: isOpening ? -92 : 0,
+              x: isOpening ? '-96%' : '0%',
             }}
             transition={{
-              duration: 2.2,
+              duration: 2.4,
               ease: [0.65, 0, 0.35, 1],
             }}
             style={{
@@ -318,7 +314,6 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
               boxShadow: isOpening ? 'none' : 'inset -5px 0 15px rgba(0,0,0,0.5)',
             }}
           >
-            {/* Depth shadow on left door edge */}
             <div
               style={{
                 position: 'absolute',
@@ -336,11 +331,11 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           <motion.div
             initial={{ rotateY: 0, x: 0 }}
             animate={{
-              rotateY: isOpening ? 85 : 0,
-              x: isOpening ? '95%' : '0%',
+              rotateY: isOpening ? 92 : 0,
+              x: isOpening ? '96%' : '0%',
             }}
             transition={{
-              duration: 2.2,
+              duration: 2.4,
               ease: [0.65, 0, 0.35, 1],
             }}
             style={{
@@ -358,7 +353,6 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
               boxShadow: isOpening ? 'none' : 'inset 5px 0 15px rgba(0,0,0,0.5)',
             }}
           >
-            {/* Depth shadow on right door edge */}
             <div
               style={{
                 position: 'absolute',
@@ -398,39 +392,60 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
           {/* ══ LAYER 4: "YOU ARE INVITED" BADGE ══ */}
           <InvitedBadge isOpening={isOpening} />
 
-          {/* ══ LAYER 5: COUPLE ILLUSTRATION (WALKING FORWARD INTO DOORWAY) ══ */}
+          {/* ══ LAYER 5: COUPLE ILLUSTRATION (STATIC IN FOREGROUND) ══ */}
           <motion.div
-            initial={{ x: '-50%', y: 0, scale: 1, opacity: 1 }}
+            initial={{ x: '-50%', opacity: 1 }}
             animate={{
               x: '-50%',
-              y: isWalking ? -80 : 0,
-              scale: isWalking ? 0.72 : 1,
               opacity: isGlowingOut ? 0.2 : 1,
             }}
             transition={{
-              duration: isWalking ? 3.4 : 0.8,
-              ease: [0.25, 1, 0.5, 1],
+              duration: 0.8,
+              ease: 'easeOut',
             }}
             style={{
               position: 'absolute',
-              bottom: '15%',
+              bottom: '14%',
               left: '50%',
               zIndex: 20,
               width: '52%',
               maxWidth: '225px',
               pointerEvents: 'none',
               display: 'flex',
-              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
-            <img
-              src="/images/couple-transparent.png"
-              alt="Harsh and Rutbi"
+            <div
               style={{
                 width: '100%',
-                height: 'auto',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 10px 22px rgba(0,0,0,0.5))',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src="/images/couple-transparent.png"
+                alt="Harsh and Rutbi"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  filter: isOpening
+                    ? 'drop-shadow(0 8px 16px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(255,220,130,0.5))'
+                    : 'drop-shadow(0 10px 22px rgba(0,0,0,0.5))',
+                  transition: 'filter 1.2s ease',
+                }}
+              />
+            </div>
+
+            {/* Ground Contact Shadow */}
+            <div
+              style={{
+                width: '70%',
+                height: '8px',
+                borderRadius: '50%',
+                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, transparent 75%)',
+                marginTop: '-4px',
               }}
             />
           </motion.div>

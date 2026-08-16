@@ -1,75 +1,197 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface HeartScratchCardProps {
   dateText?: string;
+  venueText?: string;
 }
 
-export default function HeartScratchCard({ dateText = 'DECEMBER 9, 2026' }: HeartScratchCardProps) {
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
+}
+
+export default function HeartScratchCard({
+  dateText = 'DECEMBER 09, 2026',
+  venueText = 'Hotel Nalanda Regency, Rajgir',
+}: HeartScratchCardProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [scratchPercent, setScratchPercent] = useState(0);
   const [isScratching, setIsScratching] = useState(false);
+  const particlesRef = useRef<Particle[]>([]);
+  const animFrameRef = useRef<number | null>(null);
 
-  useEffect(() => {
+  // Initialize canvas with rich gold foil texture
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Canvas Dimensions
-    const width = 320;
-    const height = 160;
+    const width = canvas.offsetWidth || 340;
+    const height = canvas.offsetHeight || 190;
     canvas.width = width;
     canvas.height = height;
 
-    // Draw Gold Metallic Cover
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, '#ffe082');
-    gradient.addColorStop(0.3, '#d4af37');
-    gradient.addColorStop(0.7, '#aa8321');
-    gradient.addColorStop(1, '#ffe082');
+    // Rich multi-stop metallic gold gradient
+    const grad = ctx.createLinearGradient(0, 0, width, height);
+    grad.addColorStop(0, '#f9e8a2');
+    grad.addColorStop(0.2, '#d4af37');
+    grad.addColorStop(0.4, '#aa771c');
+    grad.addColorStop(0.6, '#f9e8a2');
+    grad.addColorStop(0.8, '#c59b27');
+    grad.addColorStop(1, '#e6ca65');
 
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // Overlay "SCRATCH HERE" Text
-    ctx.fillStyle = '#4a3505';
-    ctx.font = '600 13px "Plus Jakarta Sans", sans-serif';
+    // Add subtle luxury sparkle / noise texture to the foil
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    for (let i = 0; i < 300; i++) {
+      const px = Math.random() * width;
+      const py = Math.random() * height;
+      const pr = Math.random() * 1.5;
+      ctx.beginPath();
+      ctx.arc(px, py, pr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Inner gold border line on foil
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(10, 10, width - 20, height - 20);
+
+    // Decorative corner brackets on the foil
+    const cornerSize = 14;
+    ctx.strokeStyle = '#6b4c05';
+    ctx.lineWidth = 2;
+
+    // Top-Left
+    ctx.beginPath();
+    ctx.moveTo(14, 14 + cornerSize);
+    ctx.lineTo(14, 14);
+    ctx.lineTo(14 + cornerSize, 14);
+    ctx.stroke();
+
+    // Top-Right
+    ctx.beginPath();
+    ctx.moveTo(width - 14 - cornerSize, 14);
+    ctx.lineTo(width - 14, 14);
+    ctx.lineTo(width - 14, 14 + cornerSize);
+    ctx.stroke();
+
+    // Bottom-Left
+    ctx.beginPath();
+    ctx.moveTo(14, height - 14 - cornerSize);
+    ctx.lineTo(14, height - 14);
+    ctx.lineTo(14 + cornerSize, height - 14);
+    ctx.stroke();
+
+    // Bottom-Right
+    ctx.beginPath();
+    ctx.moveTo(width - 14 - cornerSize, height - 14);
+    ctx.lineTo(width - 14, height - 14);
+    ctx.lineTo(width - 14, height - 14 - cornerSize);
+    ctx.stroke();
+
+    // Center Gold Icon (Sparkle/Coin symbol)
+    ctx.fillStyle = '#5c3d05';
+    ctx.font = 'bold 22px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.fillText('✨', width / 2, height / 2 - 22);
+
+    // Foil Header Calligraphy
+    ctx.font = 'bold 13px "Playfair Display", Georgia, serif';
     ctx.letterSpacing = '2px';
-    ctx.fillText('SCRATCH HERE', width / 2, height / 2);
+    ctx.fillStyle = '#4a3002';
+    ctx.fillText('SCRATCH TO REVEAL DATE', width / 2, height / 2 + 6);
+
+    // Foil Subtitle
+    ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
+    ctx.letterSpacing = '1.5px';
+    ctx.fillStyle = '#6b4c05';
+    ctx.fillText('✦ USE YOUR FINGER OR MOUSE ✦', width / 2, height / 2 + 28);
   }, []);
 
-  const checkScratchPercentage = () => {
+  useEffect(() => {
+    initCanvas();
+    window.addEventListener('resize', initCanvas);
+    return () => window.removeEventListener('resize', initCanvas);
+  }, [initCanvas]);
+
+  // Trigger celebratory confetti on reveal
+  const triggerCelebration = useCallback(() => {
+    setIsRevealed(true);
+    confetti({
+      particleCount: 60,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#d4af37', '#f48fb1', '#ffffff', '#e85d75', '#ffe082'],
+    });
+  }, []);
+
+  // Calculate scratched surface percentage
+  const checkScratchPercentage = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || isRevealed) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let transparentPixels = 0;
+    try {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+      let transparentPixels = 0;
 
-    // Count transparent pixels (alpha channel)
-    for (let i = 3; i < pixels.length; i += 4) {
-      if (pixels[i] === 0) {
-        transparentPixels++;
+      // Sample every 4th pixel for performance
+      for (let i = 3; i < pixels.length; i += 16) {
+        if (pixels[i] < 128) {
+          transparentPixels++;
+        }
       }
+
+      const totalSampled = pixels.length / 16;
+      const percentage = (transparentPixels / totalSampled) * 100;
+      setScratchPercent(Math.round(percentage));
+
+      // Once 10% is scratched, automatically reveal with celebration
+      if (percentage >= 10 && !isRevealed) {
+        triggerCelebration();
+      }
+    } catch {
+      // Fallback
     }
+  }, [isRevealed, triggerCelebration]);
 
-    const percentage = (transparentPixels / (pixels.length / 4)) * 100;
-
-    // Reveal completely once user scratches even a tiny bit (>2%)
-    if (percentage > 2) {
-      setIsRevealed(true);
+  // Emit gold sparkle dust particles while scratching
+  const spawnParticles = (x: number, y: number) => {
+    const colors = ['#ffe082', '#d4af37', '#ffffff', '#ffca28'];
+    for (let i = 0; i < 4; i++) {
+      particlesRef.current.push({
+        x: x + (Math.random() - 0.5) * 20,
+        y: y + (Math.random() - 0.5) * 20,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3 - 1,
+        size: Math.random() * 3 + 2,
+        alpha: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
     }
   };
 
+  // Perform scratch brush operation
   const scratch = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas || isRevealed) return;
@@ -78,110 +200,292 @@ export default function HeartScratchCard({ dateText = 'DECEMBER 9, 2026' }: Hear
     if (!ctx) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
+    const x = ((clientX - rect.left) / rect.width) * canvas.width;
+    const y = ((clientY - rect.top) / rect.height) * canvas.height;
 
+    // Brush with soft radial gradient edge
     ctx.globalCompositeOperation = 'destination-out';
+    const brushRadius = 26;
+    const brushGrad = ctx.createRadialGradient(x, y, 0, x, y, brushRadius);
+    brushGrad.addColorStop(0, 'rgba(0,0,0,1)');
+    brushGrad.addColorStop(0.7, 'rgba(0,0,0,0.9)');
+    brushGrad.addColorStop(1, 'rgba(0,0,0,0)');
+
+    ctx.fillStyle = brushGrad;
     ctx.beginPath();
-    ctx.arc(x, y, 35, 0, Math.PI * 2);
+    ctx.arc(x, y, brushRadius, 0, Math.PI * 2);
     ctx.fill();
 
+    spawnParticles(clientX - rect.left, clientY - rect.top);
     checkScratchPercentage();
   };
 
-  // Mouse Handlers
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsScratching(true);
-    scratch(e.clientX, e.clientY);
-  };
+  // Particle animation loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isScratching) {
-      scratch(e.clientX, e.clientY);
-    }
-  };
+    const updateParticles = () => {
+      if (particlesRef.current.length > 0) {
+        particlesRef.current = particlesRef.current
+          .map((p) => ({
+            ...p,
+            x: p.x + p.vx,
+            y: p.y + p.vy,
+            alpha: p.alpha - 0.04,
+          }))
+          .filter((p) => p.alpha > 0);
+      }
+      animFrameRef.current = requestAnimationFrame(updateParticles);
+    };
 
-  const handleMouseUp = () => setIsScratching(false);
-
-  // Touch Handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsScratching(true);
-    if (e.touches[0]) {
-      scratch(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (isScratching && e.touches[0]) {
-      scratch(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchEnd = () => setIsScratching(false);
+    animFrameRef.current = requestAnimationFrame(updateParticles);
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '320px',
-        height: '160px',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        boxShadow: '0 8px 24px rgba(140, 45, 66, 0.12)',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-      }}
-    >
-      {/* Revealed Content Beneath */}
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+      {/* ── Main Scratch Card Container ── */}
       <div
+        ref={containerRef}
         style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(135deg, #2a0812 0%, #120206 100%)',
-          border: '1px solid rgba(212, 175, 55, 0.6)',
-          borderRadius: '16px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          textAlign: 'center',
+          position: 'relative',
+          width: '100%',
+          maxWidth: '350px',
+          height: '195px',
+          borderRadius: '22px',
+          overflow: 'hidden',
+          boxShadow: '0 14px 35px rgba(120, 30, 50, 0.18), 0 2px 6px rgba(212, 175, 55, 0.25)',
+          border: '2px solid rgba(212, 175, 55, 0.75)',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          background: '#ffffff',
         }}
       >
-        <p style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.25em', color: '#d4af37', margin: 0 }}>
-          Save The Date
-        </p>
-        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', color: '#ffe082', margin: '8px 0', fontWeight: '500' }}>
-          {dateText}
-        </p>
-        <p style={{ fontSize: '12px', letterSpacing: '0.1em', color: '#fecdd3', margin: 0 }}>
-          MUMBAI, INDIA
-        </p>
+        {/* ══ REVEALED CONTENT UNDERNEATH ══ */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, #2b0610 0%, #170208 50%, #2f0814 100%)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px 20px',
+            textAlign: 'center',
+            color: '#fff',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Subtle background mandala pattern */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: 0.12,
+              backgroundImage: 'radial-gradient(#d4af37 1px, transparent 1px)',
+              backgroundSize: '16px 16px',
+            }}
+          />
+
+          {/* Top Pill Tag */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            style={{
+              background: 'linear-gradient(90deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0.2) 100%)',
+              border: '1px solid rgba(212,175,55,0.6)',
+              borderRadius: '12px',
+              padding: '2px 12px',
+              marginBottom: '6px',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '9px',
+                letterSpacing: '0.24em',
+                color: '#f9e8a2',
+                fontWeight: '700',
+                textTransform: 'uppercase',
+              }}
+            >
+              ✦ Sacred Date Revealed ✦
+            </span>
+          </motion.div>
+
+          {/* Couple Names Script */}
+          <p
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              fontSize: '26px',
+              color: '#ffd54f',
+              margin: '0 0 2px 0',
+              lineHeight: '1.1',
+              textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+            }}
+          >
+            Harsh &amp; Rutbi
+          </p>
+
+          {/* Big Date Text */}
+          <p
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '22px',
+              fontWeight: '700',
+              letterSpacing: '0.08em',
+              background: 'linear-gradient(180deg, #ffffff 0%, #ffe082 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              margin: '2px 0 4px 0',
+            }}
+          >
+            {dateText}
+          </p>
+
+          {/* Venue & Note */}
+          <p
+            style={{
+              fontSize: '11px',
+              letterSpacing: '0.08em',
+              color: '#f8bbd0',
+              margin: 0,
+              fontWeight: '500',
+            }}
+          >
+            📍 {venueText}
+          </p>
+
+          {/* Heart icon indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
+            <span style={{ color: '#d4af37', fontSize: '10px' }}>✦</span>
+            <span style={{ fontSize: '10px', color: '#ffcdd2', fontStyle: 'italic' }}>
+              We cannot wait to celebrate with you!
+            </span>
+            <span style={{ color: '#d4af37', fontSize: '10px' }}>✦</span>
+          </div>
+        </div>
+
+        {/* ══ INTERACTIVE GOLD METALLIC FOIL CANVAS ══ */}
+        <motion.canvas
+          ref={canvasRef}
+          animate={{
+            opacity: isRevealed ? 0 : 1,
+            scale: isRevealed ? 1.05 : 1,
+          }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          onMouseDown={(e) => {
+            setIsScratching(true);
+            scratch(e.clientX, e.clientY);
+          }}
+          onMouseMove={(e) => {
+            if (isScratching) scratch(e.clientX, e.clientY);
+          }}
+          onMouseUp={() => setIsScratching(false)}
+          onMouseLeave={() => setIsScratching(false)}
+          onTouchStart={(e) => {
+            setIsScratching(true);
+            if (e.touches[0]) scratch(e.touches[0].clientX, e.touches[0].clientY);
+          }}
+          onTouchMove={(e) => {
+            if (isScratching && e.touches[0]) scratch(e.touches[0].clientX, e.touches[0].clientY);
+          }}
+          onTouchEnd={() => setIsScratching(false)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            cursor: isRevealed ? 'default' : 'grab',
+            pointerEvents: isRevealed ? 'none' : 'auto',
+            touchAction: 'none',
+            zIndex: 10,
+          }}
+        />
+
+        {/* Shimmer light sweep across gold foil when not yet revealed */}
+        {!isRevealed && (
+          <motion.div
+            animate={{
+              x: ['-100%', '200%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatDelay: 2,
+              ease: 'easeInOut',
+            }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '50%',
+              height: '100%',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)',
+              transform: 'skewX(-25deg)',
+              pointerEvents: 'none',
+              zIndex: 12,
+            }}
+          />
+        )}
       </div>
 
-      {/* Gold Scratch Surface */}
-      <motion.canvas
-        ref={canvasRef}
-        animate={{ opacity: isRevealed ? 0 : 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+      {/* ── Status & Quick Reveal Helper ── */}
+      <div
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           width: '100%',
-          height: '100%',
-          cursor: isRevealed ? 'default' : 'pointer',
-          pointerEvents: isRevealed ? 'none' : 'auto',
-          touchAction: 'none',
+          maxWidth: '350px',
+          marginTop: '10px',
+          padding: '0 4px',
         }}
-      />
+      >
+        <span
+          style={{
+            fontSize: '11px',
+            color: isRevealed ? '#2e7d32' : '#8c2d42',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          {isRevealed ? (
+            <>
+              <CheckCircle2 size={13} color="#2e7d32" />
+              <span>Date Revealed! 🎉</span>
+            </>
+          ) : (
+            <>
+              <Sparkles size={12} color="#d4af37" />
+              <span>{scratchPercent > 0 ? `${scratchPercent}% scratched` : 'Swipe to scratch'}</span>
+            </>
+          )}
+        </span>
+
+        {!isRevealed && (
+          <button
+            onClick={triggerCelebration}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#8c2d42',
+              fontSize: '11px',
+              fontWeight: '700',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              padding: '2px 6px',
+            }}
+          >
+            Auto Reveal ✨
+          </button>
+        )}
+      </div>
     </div>
   );
 }
