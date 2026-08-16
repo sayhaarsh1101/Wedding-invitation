@@ -174,16 +174,16 @@ export default function EnvelopeIntro({ onStartOpen, onOpen }: EnvelopeIntroProp
 
     setPhase('opening');
 
-    // Warm golden bloom transition after doors open and petals burst
+    // Warm golden bloom transition shortly after doors swing open
     setTimeout(() => {
       setPhase('glowOut');
-    }, 3200);
+    }, 1600);
 
-    // Transition to main invitation
+    // Complete transition to main invitation
     setTimeout(() => {
       setPhase('done');
       onOpen();
-    }, 4200);
+    }, 2400);
   }, [phase, onStartOpen, onOpen]);
 
   if (phase === 'done') return null;

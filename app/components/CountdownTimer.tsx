@@ -10,9 +10,8 @@ export default function CountdownTimer({ targetDate }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const target = new Date(targetDate).getTime();
-
-    const interval = setInterval(() => {
+    const calculateTime = () => {
+      const target = new Date(targetDate).getTime();
       const now = new Date().getTime();
       const difference = target - now;
 
@@ -24,8 +23,10 @@ export default function CountdownTimer({ targetDate }: CountdownProps) {
           seconds: Math.floor((difference / 1000) % 60),
         });
       }
-    }, 1000);
+    };
 
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
   }, [targetDate]);
 

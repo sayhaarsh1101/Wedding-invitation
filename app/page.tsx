@@ -12,6 +12,9 @@ import {
   Shirt,
   Sparkles,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Camera,
   CheckCircle2,
   MapPin,
   Calendar,
@@ -49,10 +52,44 @@ export default function WeddingInvitation() {
   )}`;
 
   const galleryImages = [
-    'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+    {
+      src: '/images/gallery-4.png',
+      title: 'Royal Togetherness',
+      desc: 'Harsh & Rutbi',
+    },
+    {
+      src: '/images/gallery-3.jpg',
+      title: 'Forever & Always',
+      desc: 'Wrapped in love and warmth',
+    },
+    {
+      src: '/images/gallery-2.jpg',
+      title: 'Hand in Hand',
+      desc: 'Walking through life together',
+    },
+    {
+      src: '/images/gallery-1.jpg',
+      title: 'Every Sweet Moment',
+      desc: 'Celebrating our joy',
+    },
   ];
+
+  // Auto-advance photo carousel every 4.5s
+  useEffect(() => {
+    if (!isOpen) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isOpen, galleryImages.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -309,49 +346,12 @@ export default function WeddingInvitation() {
                 Harsh &amp; Rutbi
               </h1>
 
-              {/* Luxury Date Badge */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '16px',
-                  borderTop: '1px solid #e8cdd4',
-                  borderBottom: '1px solid #e8cdd4',
-                  padding: '10px 0',
-                  margin: '12px 0',
-                  width: '90%',
-                }}
-              >
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.15em', color: '#8c2d42', display: 'block' }}>
-                    DECEMBER
-                  </span>
-                  <span style={{ fontSize: '9px', color: '#7a4e58', letterSpacing: '0.1em' }}>
-                    WEDNESDAY
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: '36px',
-                    fontWeight: '700',
-                    color: '#7a2335',
-                    lineHeight: '1',
-                  }}
-                >
-                  09
-                </div>
-
-                <div style={{ textAlign: 'left' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.15em', color: '#8c2d42', display: 'block' }}>
-                    2026
-                  </span>
-                  <span style={{ fontSize: '9px', color: '#7a4e58', letterSpacing: '0.1em' }}>
-                    11:30 AM
-                  </span>
-                </div>
+              {/* Interactive Gold Foil Date Reveal */}
+              <div style={{ width: '100%', margin: '14px 0 16px 0', display: 'flex', justifyContent: 'center' }}>
+                <HeartScratchCard
+                  dateText="WEDNESDAY, DEC 09, 2026"
+                  venueText="Hotel Nalanda Regency, Rajgir"
+                />
               </div>
 
               {/* Venue Subtitle */}
@@ -404,44 +404,208 @@ export default function WeddingInvitation() {
             <CountdownTimer targetDate="2026-12-09T10:00:00" />
           </section>
 
-          {/* 5. Scratch to Reveal Section */}
-          <section style={sectionCardStyle}>
-            <h2 style={cursiveHeaderStyle}>Scratch for a Secret Message</h2>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 14px 0' }}>
-              <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
-              <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
-              <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
-              <HeartScratchCard dateText="DECEMBER 9, 2026" />
-            </div>
-          </section>
-
           {/* 6. Photo Carousel Gallery */}
-          <section style={{ ...sectionCardStyle, padding: '16px' }}>
-            <div style={{ position: 'relative', width: '100%', height: '240px', borderRadius: '16px', overflow: 'hidden' }}>
-              <img
-                src={galleryImages[currentSlide]}
-                alt="Couple Gallery"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.5s ease' }}
-              />
-              <div style={{ position: 'absolute', bottom: '12px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '6px' }}>
-                {galleryImages.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentSlide(idx)}
+          <section style={{ ...sectionCardStyle, padding: '24px 18px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <Camera size={20} color="#8c2d42" style={{ margin: '0 auto 4px auto' }} />
+              <h2 style={cursiveHeaderStyle}>Moments of Love</h2>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 10px 0' }}>
+                <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
+                <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
+                <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
+              </div>
+              <p style={{ fontSize: '11px', color: '#7a4e58', margin: 0, letterSpacing: '0.05em' }}>
+                Glimpses of our beautiful journey together
+              </p>
+            </div>
+
+            {/* Main Carousel Frame */}
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '380px',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                boxShadow: '0 12px 30px rgba(138, 43, 66, 0.15)',
+                border: '1.5px solid #e8cdd4',
+                backgroundColor: '#1f070e',
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentSlide}
+                  initial={{ opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  style={{ position: 'absolute', inset: 0 }}
+                >
+                  <img
+                    src={galleryImages[currentSlide].src}
+                    alt={galleryImages[currentSlide].title}
                     style={{
-                      width: currentSlide === idx ? '18px' : '6px',
-                      height: '6px',
-                      borderRadius: '3px',
-                      backgroundColor: currentSlide === idx ? '#8c2d42' : 'rgba(255,255,255,0.7)',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center top',
                     }}
                   />
-                ))}
+
+                  {/* Gradient Shadow Overlay for Text Readability */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 40%, rgba(15,2,6,0.85) 100%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Bottom Slide Info & Caption */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '22px',
+                      left: '16px',
+                      right: '16px',
+                      textAlign: 'center',
+                      color: '#ffffff',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+                    }}
+                  >
+                    <h3
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: '#ffd54f',
+                        margin: '0 0 2px 0',
+                      }}
+                    >
+                      {galleryImages[currentSlide].title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: '11px',
+                        color: '#f8bbd0',
+                        margin: 0,
+                        fontWeight: '400',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      {galleryImages[currentSlide].desc}
+                    </p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Arrow Buttons */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevSlide();
+                }}
+                aria-label="Previous Photo"
+                style={{
+                  position: 'absolute',
+                  left: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(4px)',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  zIndex: 10,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <ChevronLeft size={18} color="#732335" />
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextSlide();
+                }}
+                aria-label="Next Photo"
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(4px)',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  zIndex: 10,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <ChevronRight size={18} color="#732335" />
+              </button>
+
+              {/* Slide Counter Badge */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.55)',
+                  backdropFilter: 'blur(6px)',
+                  borderRadius: '12px',
+                  padding: '3px 9px',
+                  color: '#fff',
+                  fontSize: '10px',
+                  fontWeight: '600',
+                  letterSpacing: '0.1em',
+                  zIndex: 10,
+                }}
+              >
+                {currentSlide + 1} / {galleryImages.length}
               </div>
+            </div>
+
+            {/* Thumbnail Navigation Indicators */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '14px',
+              }}
+            >
+              {galleryImages.map((item, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  style={{
+                    width: currentSlide === idx ? '26px' : '8px',
+                    height: '8px',
+                    borderRadius: '4px',
+                    backgroundColor: currentSlide === idx ? '#8c2d42' : '#e0c0c8',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                />
+              ))}
             </div>
           </section>
 
