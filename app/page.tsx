@@ -41,10 +41,10 @@ export default function WeddingInvitation() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const venueName = 'Rajgir Convention Centre';
-  const venueAddress = 'Rajgir, Bihar, India - 803116';
+  const venueName = 'Hotel Nalanda Regency';
+  const venueAddress = 'Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116';
 
-  const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  const googleMapsDirectionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venueName}, ${venueAddress}`
   )}`;
 
@@ -554,9 +554,9 @@ export default function WeddingInvitation() {
             </div>
 
             {[
-              { name: 'Mehendi', time: 'Dec 7, 2026 • 6:00 PM', place: 'Rajgir, Bihar' },
-              { name: 'Haldi', time: 'Dec 8, 2026 • 10:00 AM', place: 'Rajgir, Bihar' },
-              { name: 'Sangeet', time: 'Dec 8, 2026 • 7:00 PM', place: 'Rajgir Convention Centre' },
+              { name: 'Mehendi', time: 'Dec 7, 2026 • 6:00 PM', place: 'Hotel Nalanda Regency, Rajgir' },
+              { name: 'Haldi', time: 'Dec 8, 2026 • 10:00 AM', place: 'Hotel Nalanda Regency, Rajgir' },
+              { name: 'Sangeet', time: 'Dec 8, 2026 • 7:00 PM', place: 'Hotel Nalanda Regency, Rajgir' },
             ].map((evt, idx) => (
               <div key={idx} style={{ marginBottom: idx === 2 ? '0' : '16px' }}>
                 <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', color: '#4a1525', margin: '0 0 2px 0', fontWeight: '600' }}>
@@ -594,8 +594,11 @@ export default function WeddingInvitation() {
               <span style={{ color: '#8c2d42', fontSize: '10px', margin: '0 6px' }}>♥</span>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
             </div>
-            <p style={{ fontSize: '12px', color: '#683f49', margin: 0, lineHeight: '1.6' }}>
-              Special accommodation for all our guests has been arranged at Rajgir Residency.
+            <p style={{ fontSize: '12px', color: '#683f49', margin: '0 0 6px 0', lineHeight: '1.6' }}>
+              Special accommodation for all our esteemed guests has been arranged at <strong>Hotel Nalanda Regency</strong>.
+            </p>
+            <p style={{ fontSize: '11px', color: '#8c2d42', margin: 0 }}>
+              Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116
             </p>
           </section>
 
