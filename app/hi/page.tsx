@@ -405,7 +405,6 @@ export default function HindiWeddingInvitation() {
                 revealedPillText="✦ पावन विवाह तिथि ✦"
                 celebrateNote="आपकी गरिमामयी उपस्थिति प्रार्थनीय है 💕"
                 revealedStatusText="शुभ तिथि प्रकट! 🎉"
-                autoRevealText="तुरंत देखें ✨"
                 swipeToScratchText="स्क्रैच करें"
               />
             </div>

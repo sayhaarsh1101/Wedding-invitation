@@ -33,12 +33,6 @@
   box-shadow: 0 10px 25px rgba(164, 90, 106, 0.08);
 }
 
-@media (min-width: 640px) {
-  .royal-card {
-    padding: 2rem;
-  }
-}
-
 /* 3D Intro Scene Animations */
 @keyframes float-particle {
   0%, 100% {

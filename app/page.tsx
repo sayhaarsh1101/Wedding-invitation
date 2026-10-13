@@ -398,7 +398,7 @@ export default function WeddingInvitation() {
           </section>
 
           {/* 4. Countdown Timer Card */}
-          <section style={sectionCardStyle}>
+          <section style={{ ...sectionCardStyle, background: 'linear-gradient(135deg, #fffdfb 0%, #fef7f0 50%, #fdf2f4 100%)', borderBottom: '2px solid rgba(212, 175, 55, 0.3)' }}>
             <h2 style={cursiveHeaderStyle}>Counting Down to Forever</h2>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 16px 0' }}>
               <div style={{ width: '30px', height: '1px', backgroundColor: '#e2b4be' }} />
@@ -519,19 +519,19 @@ export default function WeddingInvitation() {
                   width: '34px',
                   height: '34px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                  backdropFilter: 'blur(4px)',
-                  border: 'none',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(6px)',
+                  border: '1.5px solid rgba(212, 175, 55, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  boxShadow: '0 4px 14px rgba(140, 45, 66, 0.25)',
                   zIndex: 10,
                   transition: 'all 0.2s ease',
                 }}
               >
-                <ChevronLeft size={18} color="#732335" />
+                <ChevronLeft size={18} color="#8c2d42" />
               </button>
 
               <button
@@ -548,19 +548,19 @@ export default function WeddingInvitation() {
                   width: '34px',
                   height: '34px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                  backdropFilter: 'blur(4px)',
-                  border: 'none',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(6px)',
+                  border: '1.5px solid rgba(212, 175, 55, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  boxShadow: '0 4px 14px rgba(140, 45, 66, 0.25)',
                   zIndex: 10,
                   transition: 'all 0.2s ease',
                 }}
               >
-                <ChevronRight size={18} color="#732335" />
+                <ChevronRight size={18} color="#8c2d42" />
               </button>
 
               {/* Slide Counter Badge */}
@@ -676,7 +676,10 @@ export default function WeddingInvitation() {
                 fontWeight: '600',
                 textDecoration: 'none',
                 boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               }}
+              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(115, 35, 53, 0.35)'; }}
+              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(115, 35, 53, 0.2)'; }}
             >
               View on Google Maps
             </a>
@@ -817,7 +820,10 @@ export default function WeddingInvitation() {
                       fontSize: '12px',
                       outline: 'none',
                       backgroundColor: '#faf6f7',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#e0c8ce'; e.currentTarget.style.boxShadow = 'none'; }}
                   />
                 </div>
 
@@ -840,7 +846,10 @@ export default function WeddingInvitation() {
                       fontSize: '12px',
                       outline: 'none',
                       backgroundColor: '#faf6f7',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#e0c8ce'; e.currentTarget.style.boxShadow = 'none'; }}
                   />
                 </div>
 
@@ -862,7 +871,10 @@ export default function WeddingInvitation() {
                       outline: 'none',
                       backgroundColor: '#faf6f7',
                       color: '#555',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#e0c8ce'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <option value="">Select...</option>
                     <option value="Yes, Joyfully Attending">Yes, Joyfully Attending</option>
@@ -889,7 +901,10 @@ export default function WeddingInvitation() {
                       outline: 'none',
                       backgroundColor: '#faf6f7',
                       resize: 'none',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.15)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = '#e0c8ce'; e.currentTarget.style.boxShadow = 'none'; }}
                   />
                 </div>
 
@@ -908,7 +923,10 @@ export default function WeddingInvitation() {
                     textAlign: 'center',
                     marginTop: '6px',
                     boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(115, 35, 53, 0.35)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(115, 35, 53, 0.2)'; }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
