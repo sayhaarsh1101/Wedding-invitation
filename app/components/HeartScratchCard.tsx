@@ -31,8 +31,8 @@ export default function HeartScratchCard({
   dateText = 'WEDNESDAY, DEC 09, 2026',
   venueText = 'Hotel Nalanda Regency, Rajgir',
   coupleName = 'Harsh & Rutbi',
-  foilHeader = 'Touch to Reveal Date',
-  foilSubtitle = '✦ Tap or scratch to unveil ✦',
+  foilHeader = 'Mark Your Calendar, Ji! 📅',
+  foilSubtitle = 'Tap or scratch to reveal',
   revealedPillText = '✦ Sacred Wedding Date ✦',
   celebrateNote = 'We eagerly await your presence!',
   revealedStatusText = 'Date Revealed! 🎉',
@@ -194,40 +194,73 @@ export default function HeartScratchCard({
     drawCorner(15, height - 15, 1, -1);
     drawCorner(width - 15, height - 15, -1, -1);
 
-    // 5. Center Royal Emblem
+    // 5. Center Royal Emblem & Calendar Icon
     const cx = width / 2;
-    const cy = height / 2 - 8;
+    const cy = height / 2 - 14;
 
-    // Medallion glow ring
-    ctx.strokeStyle = 'rgba(120, 80, 15, 0.5)';
+    // Medallion outer ring
+    ctx.strokeStyle = 'rgba(120, 80, 15, 0.45)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 26, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 23, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Center sparkles / stars
-    ctx.fillStyle = '#6e4508';
-    ctx.font = '16px serif';
+    // Center calendar icon
+    ctx.strokeStyle = '#8c2d42';
+    ctx.lineWidth = 1.6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const calW = 20;
+    const calH = 18;
+    const calX = cx - calW / 2;
+    const calY = cy - 9;
+
+    // Calendar body
+    ctx.beginPath();
+    if (typeof (ctx as any).roundRect === 'function') {
+      (ctx as any).roundRect(calX, calY, calW, calH, 3.5);
+    } else {
+      ctx.strokeRect(calX, calY, calW, calH);
+    }
+    ctx.stroke();
+
+    // Top rings
+    ctx.beginPath();
+    ctx.moveTo(calX + 4.5, calY - 3.5);
+    ctx.lineTo(calX + 4.5, calY);
+    ctx.moveTo(calX + calW - 4.5, calY - 3.5);
+    ctx.lineTo(calX + calW - 4.5, calY);
+    ctx.stroke();
+
+    // Top header line
+    ctx.beginPath();
+    ctx.moveTo(calX, calY + 5.5);
+    ctx.lineTo(calX + calW, calY + 5.5);
+    ctx.stroke();
+
+    // Center heart inside calendar
+    ctx.fillStyle = '#8c2d42';
+    ctx.font = '9px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('✦', cx, cy - 2);
+    ctx.fillText('♥', cx, calY + 11.5);
 
-    // Flourish lines
+    // Flourish horizontal lines
     ctx.strokeStyle = 'rgba(110, 75, 15, 0.55)';
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.moveTo(cx - 75, cy);
-    ctx.lineTo(cx - 36, cy);
+    ctx.lineTo(cx - 34, cy);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(cx + 36, cy);
+    ctx.moveTo(cx + 34, cy);
     ctx.lineTo(cx + 75, cy);
     ctx.stroke();
 
@@ -246,17 +279,16 @@ export default function HeartScratchCard({
     drawDiamond(cx + 55);
 
     // 6. Foil Header Text (Refined Royal Serif)
-    ctx.fillStyle = '#4c2602';
-    ctx.font = '600 12px "Playfair Display", "Noto Serif Devanagari", Georgia, serif';
-    ctx.letterSpacing = '0.12em';
+    ctx.fillStyle = '#4c2202';
+    ctx.font = '700 13px "Playfair Display", "Noto Serif Devanagari", Georgia, serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(foilHeader, cx, cy + 42);
+    ctx.fillText(foilHeader, cx, cy + 38);
 
     // 7. Foil Subtitle (Soft italic)
-    ctx.font = '400 9.5px "Plus Jakarta Sans", "Noto Serif Devanagari", sans-serif';
+    ctx.font = '500 10px "Plus Jakarta Sans", "Noto Serif Devanagari", sans-serif';
     ctx.fillStyle = '#6b430e';
-    ctx.fillText(foilSubtitle, cx, cy + 58);
+    ctx.fillText(foilSubtitle, cx, cy + 54);
   }, [foilHeader, foilSubtitle]);
 
   useEffect(() => {

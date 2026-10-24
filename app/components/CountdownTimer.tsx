@@ -35,19 +35,24 @@ export default function CountdownTimer({ targetDate, variant = 'light' }: Countd
 
   const boxStyle: React.CSSProperties = isDark
     ? {
-        backgroundColor: 'rgba(0, 0, 0, 0.35)',
-        border: '1px solid rgba(212, 175, 55, 0.3)',
-        borderRadius: '14px',
-        padding: '12px 8px',
+        background: 'linear-gradient(135deg, rgba(30, 8, 14, 0.72) 0%, rgba(15, 3, 7, 0.45) 100%)',
+        border: '1px solid rgba(212, 175, 55, 0.45)',
+        borderRadius: '18px',
+        padding: '14px 8px',
         textAlign: 'center',
-        backdropFilter: 'blur(4px)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: '0 10px 24px -6px rgba(0, 0, 0, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.25)',
       }
     : {
-        backgroundColor: 'rgba(140, 45, 66, 0.06)',
-        border: '1px solid rgba(140, 45, 66, 0.12)',
-        borderRadius: '14px',
-        padding: '12px 8px',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 245, 248, 0.52) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.95)',
+        borderRadius: '18px',
+        padding: '14px 8px',
         textAlign: 'center',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: '0 10px 24px -6px rgba(140, 45, 66, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)',
       };
 
   const numberStyle: React.CSSProperties = isDark

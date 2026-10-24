@@ -34,9 +34,14 @@ export default function HindiWeddingInvitation() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Form State & Feedback
-  const [rsvpForm, setRsvpForm] = useState({
+  const [rsvpForm, setRsvpForm] = useState<{
+    name: string;
+    contact: string | null;
+    attending: string;
+    message: string;
+  }>({
     name: '',
-    contact: '',
+    contact: null,
     attending: '',
     message: '',
   });
@@ -193,13 +198,14 @@ export default function HindiWeddingInvitation() {
         },
         body: JSON.stringify({
           ...rsvpForm,
+          contact: null,
           submittedAt: new Date().toISOString(),
           language: 'hi',
         }),
       });
 
       setIsSubmitted(true);
-      setRsvpForm({ name: '', contact: '', attending: '', message: '' });
+      setRsvpForm({ name: '', contact: null, attending: '', message: '' });
     } catch {
       setIsSubmitted(true);
     } finally {
@@ -207,15 +213,19 @@ export default function HindiWeddingInvitation() {
     }
   };
 
-  // Reusable card styling matching English theme
+  // Liquid Glass Luxury Card Styles
   const sectionCardStyle = {
-    backgroundColor: '#ffffff',
-    borderRadius: '20px',
-    padding: '24px 20px',
-    marginBottom: '20px',
-    boxShadow: '0 8px 30px rgba(140, 45, 66, 0.08)',
-    border: '1px solid #e8cdd4',
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 250, 252, 0.52) 100%)',
+    backdropFilter: 'blur(24px) saturate(190%)',
+    WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+    borderRadius: '28px',
+    padding: '32px 22px',
+    marginBottom: '24px',
+    boxShadow: '0 20px 48px -12px rgba(115, 35, 53, 0.10), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95), inset 0 -1.5px 2px 0 rgba(212, 175, 55, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.45)',
+    border: '1px solid rgba(255, 255, 255, 0.85)',
     textAlign: 'center' as const,
+    color: '#4a232b',
+    position: 'relative' as const,
   };
 
   const headerStyle = {
@@ -231,13 +241,22 @@ export default function HindiWeddingInvitation() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, #2b040a 0%, #3d0711 15%, #f7eff1 45%, #fceef1 100%)',
+        background: 'linear-gradient(180deg, #fdf6f7 0%, #faedf0 35%, #fff5ea 70%, #fcf0f2 100%)',
         color: '#4a1525',
         fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
         position: 'relative',
         paddingBottom: '80px',
+        overflowX: 'hidden',
       }}
     >
+      {/* Liquid Glass Ambient Lighting Orbs */}
+      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '-6%', left: '-15%', width: '380px', height: '380px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(244, 182, 194, 0.4) 0%, rgba(248, 218, 224, 0.15) 50%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', top: '25%', right: '-15%', width: '420px', height: '420px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, rgba(245, 230, 180, 0.1) 50%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', top: '55%', left: '-10%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(140, 45, 66, 0.18) 0%, rgba(226, 114, 137, 0.1) 50%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', top: '80%', right: '-10%', width: '420px', height: '420px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, rgba(254, 240, 199, 0.1) 50%, transparent 70%)', filter: 'blur(60px)' }} />
+      </div>
+
       <audio
         ref={audioRef}
         loop
@@ -260,18 +279,22 @@ export default function HindiWeddingInvitation() {
             bottom: '24px',
             right: '24px',
             zIndex: 60,
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.55) 100%)',
             padding: '12px',
             borderRadius: '50%',
-            border: '1px solid #e5c5cc',
+            border: '1px solid rgba(255, 255, 255, 0.95)',
             color: '#8c2d42',
             cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 6px 20px rgba(140, 45, 66, 0.2)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            boxShadow: '0 8px 24px -4px rgba(115, 35, 53, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
         >
           {isPlaying ? <Volume2 size={20} className="animate-pulse" /> : <VolumeX size={20} />}
         </button>
@@ -290,22 +313,23 @@ export default function HindiWeddingInvitation() {
       {isOpen && (
         <main style={{ maxWidth: '440px', margin: '0 auto', padding: '16px 16px 40px 16px' }}>
 
-          {/* Luxury Main Arched Invitation Card */}
+          {/* Luxury Main Arched Invitation Card with Liquid Glass Finish */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
             style={{
               position: 'relative',
-              borderRadius: '28px',
-              backgroundColor: '#ffffff',
-              border: '1.5px solid #e6c5cd',
-              boxShadow: '0 16px 40px rgba(138, 43, 66, 0.12)',
+              borderRadius: '32px',
+              border: '1px solid rgba(255, 255, 255, 0.92)',
+              boxShadow: '0 24px 50px -12px rgba(138, 43, 66, 0.12), inset 0 2px 3px 0 rgba(255, 255, 255, 1), inset 0 -1.5px 2px 0 rgba(212, 175, 55, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.45)',
               padding: '26px 20px 24px 20px',
               marginBottom: '24px',
               textAlign: 'center',
               overflow: 'hidden',
-              background: 'linear-gradient(180deg, #ffffff 0%, #fffbfb 60%, #faedf0 100%)',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 248, 250, 0.58) 100%)',
+              backdropFilter: 'blur(28px) saturate(190%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
             }}
           >
             {/* Background Palace Garden Wash */}
@@ -343,19 +367,21 @@ export default function HindiWeddingInvitation() {
               }}
             />
 
-            {/* Monogram Crest */}
+            {/* Monogram Crest with Liquid Glass Finish */}
             <div
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '54px',
-                height: '54px',
+                width: '56px',
+                height: '56px',
                 borderRadius: '50%',
-                border: '1.5px solid #d4af37',
+                border: '1px solid rgba(255, 255, 255, 0.95)',
                 margin: '0 auto 10px auto',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                boxShadow: '0 4px 15px rgba(212, 175, 55, 0.25)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 243, 199, 0.5) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 8px 20px -4px rgba(212, 175, 55, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)',
               }}
             >
               <span
@@ -461,12 +487,12 @@ export default function HindiWeddingInvitation() {
                 dateText="बुधवार, 09 दिसम्बर 2026"
                 venueText="होटल नालंदा रीजेंसी, राजगीर"
                 coupleName="हर्ष संग रुतबी"
-                foilHeader="विवाह तिथि देखने के लिए स्क्रैच करें"
-                foilSubtitle="✦ अपनी उंगली या माउस से स्क्रैच करें ✦"
+                foilHeader="कैलेंडर में तारीख नोट कर लें, जी! 📅"
+                foilSubtitle="तारीख देखने के लिए टैप या स्क्रैच करें"
                 revealedPillText="✦ पावन विवाह तिथि ✦"
                 celebrateNote="आपकी गरिमामयी उपस्थिति प्रार्थनीय है 💕"
                 revealedStatusText="शुभ तिथि प्रकट! 🎉"
-                swipeToScratchText="स्क्रैच करें"
+                swipeToScratchText="✨ टैप या स्क्रैच करें"
               />
             </div>
 
@@ -696,21 +722,23 @@ export default function HindiWeddingInvitation() {
                   left: '10px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  width: '34px',
-                  height: '34px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                  backdropFilter: 'blur(4px)',
-                  border: 'none',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.55) 100%)',
+                  backdropFilter: 'blur(16px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  boxShadow: '0 6px 18px rgba(140, 45, 66, 0.2), inset 0 1px 1.5px rgba(255, 255, 255, 1)',
                   zIndex: 10,
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <ChevronLeft size={18} color="#732335" />
+                <ChevronLeft size={18} color="#8c2d42" />
               </button>
 
               <button
@@ -724,36 +752,42 @@ export default function HindiWeddingInvitation() {
                   right: '10px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  width: '34px',
-                  height: '34px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                  backdropFilter: 'blur(4px)',
-                  border: 'none',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.55) 100%)',
+                  backdropFilter: 'blur(16px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                  boxShadow: '0 6px 18px rgba(140, 45, 66, 0.2), inset 0 1px 1.5px rgba(255, 255, 255, 1)',
                   zIndex: 10,
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <ChevronRight size={18} color="#732335" />
+                <ChevronRight size={18} color="#8c2d42" />
               </button>
 
-              {/* Slide Counter Badge */}
+              {/* Liquid Glass Slide Counter Badge */}
               <div
                 style={{
                   position: 'absolute',
                   top: '12px',
                   right: '12px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.55)',
-                  backdropFilter: 'blur(6px)',
-                  borderRadius: '12px',
-                  padding: '3px 9px',
+                  background: 'rgba(0, 0, 0, 0.52)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  borderRadius: '9999px',
+                  padding: '4px 12px',
                   color: '#fff',
                   fontSize: '10px',
                   fontWeight: '600',
+                  letterSpacing: '0.1em',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.4)',
                   zIndex: 10,
                 }}
               >
@@ -810,22 +844,24 @@ export default function HindiWeddingInvitation() {
               “विवाह से पूर्व के सभी प्यारे उत्सव एक ही यादगार दिन में!” ✨
             </p>
 
-            {/* Event-by-Event Natural Cards (Hindi) */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
-              {/* Haldi */}
+            {/* Event-by-Event Liquid Glass Cards (Hindi) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'left' }}>
+              {/* Haldi Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fffdf2',
-                  border: '1.5px solid #f6e39b',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(255, 253, 238, 0.85) 0%, rgba(254, 240, 199, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(212, 175, 55, 0.22), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.15)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>💛</span>
-                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#614603', margin: 0, fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>💛</span>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16.5px', color: '#614603', margin: 0, fontWeight: '500' }}>
                       हल्दी उत्सव
                     </h3>
                   </div>
@@ -833,11 +869,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#fff3cd',
+                      background: 'rgba(255, 243, 205, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#856404',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #ffeeba',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(180, 130, 20, 0.1)',
                       fontFamily: "'Noto Serif Devanagari', serif",
                     }}
                   >
@@ -852,20 +891,22 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* Mehendi */}
+              {/* Mehendi Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#f3faf5',
-                  border: '1.5px solid #b7e4c7',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(46, 125, 50, 0.06)',
+                  background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.85) 0%, rgba(209, 250, 229, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(34, 197, 94, 0.18), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(34, 197, 94, 0.12)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>🌿</span>
-                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#14452f', margin: 0, fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>🌿</span>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16.5px', color: '#14452f', margin: 0, fontWeight: '500' }}>
                       मेहंदी की रस्म
                     </h3>
                   </div>
@@ -873,11 +914,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#d8f3dc',
+                      background: 'rgba(209, 250, 229, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#1b4332',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #b7e4c7',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(34, 197, 94, 0.1)',
                       fontFamily: "'Noto Serif Devanagari', serif",
                     }}
                   >
@@ -892,20 +936,22 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* Sangeet */}
+              {/* Sangeet Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fdf6fa',
-                  border: '1.5px solid #e9c2e0',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(106, 27, 154, 0.06)',
+                  background: 'linear-gradient(135deg, rgba(253, 244, 255, 0.85) 0%, rgba(243, 232, 255, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(168, 85, 247, 0.18), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(168, 85, 247, 0.12)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>🪩</span>
-                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#4a154b', margin: 0, fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>🪩</span>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16.5px', color: '#4a154b', margin: 0, fontWeight: '500' }}>
                       संगीत संध्या
                     </h3>
                   </div>
@@ -913,11 +959,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#f3e5f5',
+                      background: 'rgba(243, 232, 255, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#6a1b9a',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #e1bee7',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(168, 85, 247, 0.1)',
                       fontFamily: "'Noto Serif Devanagari', serif",
                     }}
                   >
@@ -933,22 +982,25 @@ export default function HindiWeddingInvitation() {
               </div>
             </div>
 
-            {/* Note */}
+            {/* Note Pod */}
             <div
               style={{
                 marginTop: '16px',
-                padding: '10px 14px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                border: '1px dashed #d4af37',
+                padding: '12px 16px',
+                borderRadius: '18px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(254, 243, 199, 0.35) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 4px 14px rgba(212, 175, 55, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 textAlign: 'left',
               }}
             >
-              <span style={{ fontSize: '16px', flexShrink: 0 }}>🎉</span>
-              <p style={{ fontSize: '11px', color: '#683f49', margin: 0, lineHeight: '1.4', fontFamily: "'Noto Serif Devanagari', serif" }}>
+              <span style={{ fontSize: '18px', flexShrink: 0 }}>🎉</span>
+              <p style={{ fontSize: '11.5px', color: '#683f49', margin: 0, lineHeight: '1.45', fontFamily: "'Noto Serif Devanagari', serif" }}>
                 उत्सव से भरा पूरा दिन — स्वादिष्ट भोजन और संगीत का आनंद लेने के लिए तैयार रहें!
               </p>
             </div>
@@ -974,21 +1026,23 @@ export default function HindiWeddingInvitation() {
               “शुभ घड़ी आ गई! आपकी उपस्थिति और प्यार भरा आशीर्वाद ही हमारे लिए सबसे अनमोल उपहार है।” ✨
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
-              {/* Guest Arrival */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'left' }}>
+              {/* Guest Arrival Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fffdf5',
-                  border: '1.5px solid #f6e39b',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(255, 253, 242, 0.85) 0%, rgba(254, 243, 199, 0.42) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(212, 175, 55, 0.20), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.15)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>🧳</span>
-                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#614603', margin: 0, fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>🧳</span>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16.5px', color: '#614603', margin: 0, fontWeight: '500' }}>
                       अतिथि आगमन एवं स्वागत
                     </h3>
                   </div>
@@ -996,11 +1050,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#fff3cd',
+                      background: 'rgba(255, 243, 205, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#856404',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #ffeeba',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(180, 130, 20, 0.1)',
                       fontFamily: "'Noto Serif Devanagari', serif",
                     }}
                   >
@@ -1012,20 +1069,22 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* Wedding Ceremony */}
+              {/* Wedding Ceremony Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fcf3f5',
-                  border: '1.5px solid #e8b3be',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(140, 45, 66, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(255, 242, 245, 0.88) 0%, rgba(252, 228, 236, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(140, 45, 66, 0.20), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.18)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>💍</span>
-                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#4a121e', margin: 0, fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>💍</span>
+                    <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16.5px', color: '#4a121e', margin: 0, fontWeight: '500' }}>
                       शुभ विवाह संस्कार (वरमाला व फेरे)
                     </h3>
                   </div>
@@ -1033,11 +1092,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#fce4ec',
+                      background: 'rgba(252, 228, 236, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#8c2d42',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #f8bbd0',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 6px rgba(140, 45, 66, 0.1)',
                       fontFamily: "'Noto Serif Devanagari', serif",
                     }}
                   >
@@ -1050,14 +1112,17 @@ export default function HindiWeddingInvitation() {
               </div>
             </div>
 
-            {/* Celebrations Pro-Tip */}
+            {/* Celebrations Pro-Tip Pod */}
             <div
               style={{
                 marginTop: '16px',
-                padding: '10px 14px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                border: '1px dashed #d4af37',
+                padding: '12px 16px',
+                borderRadius: '18px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(254, 243, 199, 0.35) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 4px 14px rgba(212, 175, 55, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
@@ -1092,16 +1157,23 @@ export default function HindiWeddingInvitation() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                display: 'inline-block',
-                backgroundColor: '#732335',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'linear-gradient(135deg, #8c2d42 0%, #6e1c2e 100%)',
                 color: '#ffffff',
-                padding: '10px 24px',
-                borderRadius: '8px',
-                fontSize: '12px',
+                padding: '12px 28px',
+                borderRadius: '9999px',
+                fontSize: '12.5px',
                 fontWeight: '600',
                 textDecoration: 'none',
-                boxShadow: '0 4px 12px rgba(115, 35, 53, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.35)',
+                boxShadow: '0 10px 24px -6px rgba(140, 45, 66, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.45)',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+                fontFamily: "'Noto Serif Devanagari', serif",
               }}
+              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.transform = 'scale(1.04)'; e.currentTarget.style.boxShadow = '0 14px 28px -4px rgba(115, 35, 53, 0.45)'; }}
+              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 10px 24px -6px rgba(140, 45, 66, 0.4)'; }}
             >
               गूगल मैप्स पर रास्ता देखें ➔
             </a>
@@ -1127,21 +1199,23 @@ export default function HindiWeddingInvitation() {
               “सबसे ज़रूरी बात: वही पहनें जिसमें आप खुश, सहज और नाचने के लिए तैयार महसूस करें!” ✨
             </p>
 
-            {/* Event-by-Event Natural Cards (Hindi) */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
-              {/* Haldi */}
+            {/* Event-by-Event Liquid Glass Cards (Hindi) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'left' }}>
+              {/* Haldi Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fffdf2',
-                  border: '1.5px solid #f6e39b',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(255, 253, 238, 0.85) 0%, rgba(254, 240, 199, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(212, 175, 55, 0.22), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.15)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>💛</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>💛</span>
                     <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#614603', margin: 0, fontWeight: '500' }}>
                       हल्दी उत्सव
                     </h3>
@@ -1150,11 +1224,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#fff3cd',
+                      background: 'rgba(255, 243, 205, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#856404',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #ffeeba',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(180, 130, 20, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
@@ -1171,19 +1248,21 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* Mehendi */}
+              {/* Mehendi Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#f3faf5',
-                  border: '1.5px solid #b7e4c7',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(46, 125, 50, 0.06)',
+                  background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.85) 0%, rgba(209, 250, 229, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(34, 197, 94, 0.18), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(34, 197, 94, 0.12)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>🌿</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>🌿</span>
                     <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#14452f', margin: 0, fontWeight: '500' }}>
                       मेहंदी
                     </h3>
@@ -1192,11 +1271,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#d8f3dc',
+                      background: 'rgba(209, 250, 229, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#1b4332',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #b7e4c7',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(34, 197, 94, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
@@ -1212,19 +1294,21 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* Sangeet */}
+              {/* Sangeet Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fdf6fa',
-                  border: '1.5px solid #e9c2e0',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(106, 27, 154, 0.06)',
+                  background: 'linear-gradient(135deg, rgba(253, 244, 255, 0.85) 0%, rgba(243, 232, 255, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(168, 85, 247, 0.18), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(168, 85, 247, 0.12)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>🪩</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>🪩</span>
                     <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#4a154b', margin: 0, fontWeight: '500' }}>
                       संगीत संध्या
                     </h3>
@@ -1233,11 +1317,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#f3e5f5',
+                      background: 'rgba(243, 232, 255, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#6a1b9a',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #e1bee7',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 8px rgba(168, 85, 247, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
@@ -1253,19 +1340,21 @@ export default function HindiWeddingInvitation() {
                 </p>
               </div>
 
-              {/* The Wedding */}
+              {/* The Wedding Liquid Glass Pod */}
               <div
                 style={{
-                  backgroundColor: '#fcf3f5',
-                  border: '1.5px solid #e8b3be',
-                  borderRadius: '16px',
-                  padding: '14px 14px',
-                  boxShadow: '0 4px 14px rgba(140, 45, 66, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(255, 242, 245, 0.88) 0%, rgba(252, 228, 236, 0.45) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '22px',
+                  padding: '16px 16px',
+                  boxShadow: '0 10px 28px -6px rgba(140, 45, 66, 0.20), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.18)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '16px' }}>👑</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>👑</span>
                     <h3 style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '16px', color: '#4a121e', margin: 0, fontWeight: '500' }}>
                       शुभ विवाह (वेडिंग)
                     </h3>
@@ -1274,11 +1363,14 @@ export default function HindiWeddingInvitation() {
                     style={{
                       fontSize: '9.5px',
                       fontWeight: '700',
-                      backgroundColor: '#fce4ec',
+                      background: 'rgba(252, 228, 236, 0.75)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       color: '#8c2d42',
-                      padding: '3px 9px',
-                      borderRadius: '12px',
-                      border: '1px solid #f8bbd0',
+                      padding: '4px 11px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      boxShadow: 'inset 0 1px 1.5px rgba(255, 255, 255, 1), 0 2px 6px rgba(140, 45, 66, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
@@ -1295,14 +1387,17 @@ export default function HindiWeddingInvitation() {
               </div>
             </div>
 
-            {/* Helpful Footwear Tip */}
+            {/* Helpful Footwear Tip Pod */}
             <div
               style={{
                 marginTop: '16px',
-                padding: '10px 14px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                border: '1px dashed #d4af37',
+                padding: '12px 16px',
+                borderRadius: '18px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(254, 243, 199, 0.35) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 4px 14px rgba(212, 175, 55, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
@@ -1375,56 +1470,44 @@ export default function HindiWeddingInvitation() {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleGoogleSheetsSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <form onSubmit={handleGoogleSheetsSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* 1. Name */}
                 <div>
-                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    आपका शुभ नाम *
+                  <label style={{ fontSize: '12px', color: '#683f49', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', fontFamily: "'Noto Serif Devanagari', serif" }}>
+                    <span>जी, आपकी शुभ पहचान? 😄</span>
                   </label>
                   <input
                     type="text"
                     name="name"
                     required
-                    placeholder="पूरा नाम दर्ज करें"
+                    placeholder="अपना शुभ नाम लिखें..."
                     value={rsvpForm.name}
                     onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
                     style={{
                       width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #e0c8ce',
-                      fontSize: '12px',
+                      boxSizing: 'border-box',
+                      padding: '12px 18px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      fontSize: '12.5px',
                       outline: 'none',
-                      backgroundColor: '#fffcfd',
+                      background: 'rgba(255, 255, 255, 0.75)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)',
+                      color: '#4a232b',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                      fontFamily: "'Noto Serif Devanagari', serif",
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.2)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.95)'; e.currentTarget.style.boxShadow = 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)'; }}
                   />
                 </div>
 
+                {/* 2. Attendance Selection */}
                 <div>
-                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    संपर्क सूत्र / मोबाइल नंबर *
-                  </label>
-                  <input
-                    type="text"
-                    name="contact"
-                    required
-                    placeholder="मोबाइल नंबर"
-                    value={rsvpForm.contact}
-                    onChange={(e) => setRsvpForm({ ...rsvpForm, contact: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #e0c8ce',
-                      fontSize: '12px',
-                      outline: 'none',
-                      backgroundColor: '#fffcfd',
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    क्या आप सम्मिलित हो रहे हैं? *
+                  <label style={{ fontSize: '12px', color: '#683f49', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', fontFamily: "'Noto Serif Devanagari', serif" }}>
+                    <span>तो जनाब, बारात में मिल रहे हैं ना? 💃</span>
                   </label>
                   <select
                     name="attending"
@@ -1433,41 +1516,62 @@ export default function HindiWeddingInvitation() {
                     onChange={(e) => setRsvpForm({ ...rsvpForm, attending: e.target.value })}
                     style={{
                       width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #e0c8ce',
-                      fontSize: '12px',
+                      boxSizing: 'border-box',
+                      padding: '12px 18px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      fontSize: '12.5px',
                       outline: 'none',
-                      backgroundColor: '#fffcfd',
-                      color: '#4a1525',
+                      background: 'rgba(255, 255, 255, 0.75)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)',
+                      color: '#4a232b',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                      fontFamily: "'Noto Serif Devanagari', serif",
+                      cursor: 'pointer',
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.2)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.95)'; e.currentTarget.style.boxShadow = 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)'; }}
                   >
-                    <option value="">विकल्प चुनें</option>
-                    <option value="हाँ! आपके साथ जश्न मनाने का मौका कैसे छोड़ सकते हैं">हाँ! आपके साथ जश्न मनाने का मौका कैसे छोड़ सकते हैं 🎉</option>
-                    <option value="मन से साथ हैं (किसी कारणवश नहीं आ सकेंगे)">मन से साथ हैं (किसी कारणवश नहीं आ सकेंगे)</option>
+                    <option value="">एक विकल्प चुनें...</option>
+                    <option value="जी हाँ, ज़रूर आएंगे! ❤️">जी हाँ, ज़रूर आएंगे! ❤️</option>
+                    <option value="बिल्कुल! डांस फ्लोर हिला देंगे! 🕺">बिल्कुल! डांस फ्लोर हिला देंगे! 🕺</option>
+                    <option value="बहुत मन था पर नहीं आ पाएंगे 🥺">बहुत मन था पर नहीं आ पाएंगे 🥺</option>
+                    <option value="अभी घर पर परमिशन लेनी है 😂">अभी घर पर परमिशन लेनी है 😂</option>
                   </select>
                 </div>
 
+                {/* 3. A Note for the Couple */}
                 <div>
-                  <label style={{ fontSize: '11.5px', color: '#683f49', fontWeight: '600', display: 'block', marginBottom: '4px' }}>
-                    हर्ष और रुतबी के लिए संदेश
+                  <label style={{ fontSize: '12px', color: '#683f49', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', fontFamily: "'Noto Serif Devanagari', serif" }}>
+                    <span>कुछ आशीर्वाद, कुछ राज़ या कोई फरमाइश? 💌</span>
                   </label>
                   <textarea
                     name="message"
                     rows={3}
-                    placeholder="अपनी शुभकामनाएं, सलाह या कोई खास बात लिखें..."
+                    placeholder="अपनी शुभकामनाएं, सलाह या कोई खास फरमाइश लिखें..."
                     value={rsvpForm.message}
                     onChange={(e) => setRsvpForm({ ...rsvpForm, message: e.target.value })}
                     style={{
                       width: '100%',
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #e0c8ce',
-                      fontSize: '12px',
+                      boxSizing: 'border-box',
+                      padding: '12px 16px',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255, 255, 255, 0.95)',
+                      fontSize: '12.5px',
                       outline: 'none',
-                      backgroundColor: '#fffcfd',
+                      background: 'rgba(255, 255, 255, 0.75)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      boxShadow: 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)',
                       resize: 'none',
+                      color: '#4a232b',
+                      transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                      fontFamily: "'Noto Serif Devanagari', serif",
                     }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(212,175,55,0.2)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.95)'; e.currentTarget.style.boxShadow = 'inset 0 1.5px 2px rgba(255, 255, 255, 0.95), 0 2px 8px rgba(115, 35, 53, 0.04)'; }}
                   />
                 </div>
 
@@ -1475,18 +1579,24 @@ export default function HindiWeddingInvitation() {
                   type="submit"
                   disabled={isSubmitting}
                   style={{
-                    backgroundColor: '#8c2d42',
+                    background: isSubmitting
+                      ? '#9c6270'
+                      : 'linear-gradient(135deg, #8c2d42 0%, #681829 100%)',
                     color: '#ffffff',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    border: 'none',
+                    padding: '13px 26px',
+                    borderRadius: '9999px',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
                     fontSize: '13px',
                     fontWeight: '600',
                     cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    boxShadow: '0 4px 15px rgba(140, 45, 66, 0.25)',
+                    textAlign: 'center',
                     marginTop: '6px',
-                    opacity: isSubmitting ? 0.7 : 1,
+                    boxShadow: '0 10px 26px -6px rgba(140, 45, 66, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.5)',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    fontFamily: "'Noto Serif Devanagari', serif",
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 14px 28px -4px rgba(115, 35, 53, 0.45)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 10px 26px -6px rgba(140, 45, 66, 0.45)'; }}
                 >
                   {isSubmitting ? 'संदेश भेजा जा रहा है...' : 'अपनी उपस्थिति दर्ज करें 💌'}
                 </button>
@@ -1494,8 +1604,198 @@ export default function HindiWeddingInvitation() {
             )}
           </section>
 
-          {/* 13. Blessing Closing Plaque */}
-          <section style={{ ...sectionCardStyle, backgroundColor: '#8c2d42', color: '#ffffff', border: 'none' }}>
+          {/* 13. Witty Closing Card (Hindi) */}
+          <section
+            style={{
+              ...sectionCardStyle,
+              padding: '36px 22px',
+              textAlign: 'center',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 242, 246, 0.62) 100%)',
+              boxShadow: '0 20px 48px -10px rgba(140, 45, 66, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.18)',
+            }}
+          >
+            {/* Playful Top Pill Capsule */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(254, 243, 199, 0.85)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(212, 175, 55, 0.5)',
+                borderRadius: '9999px',
+                padding: '4px 14px',
+                marginBottom: '16px',
+                boxShadow: '0 2px 8px rgba(212, 175, 55, 0.15), inset 0 1px 1px #fff',
+              }}
+            >
+              <span style={{ fontSize: '12px' }}>🎉</span>
+              <span
+                style={{
+                  fontSize: '9.5px',
+                  fontWeight: '700',
+                  letterSpacing: '0.08em',
+                  color: '#856404',
+                  fontFamily: "'Noto Serif Devanagari', serif",
+                }}
+              >
+                महत्वपूर्ण सूचना • कोई बहाना नहीं चलेगा
+              </span>
+            </div>
+
+            {/* Modern Stylish Radiant Line Divider */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                margin: '0 auto 16px auto',
+                maxWidth: '260px',
+              }}
+            >
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), rgba(140, 45, 66, 0.8))' }} />
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#d4af37', boxShadow: '0 0 8px #d4af37' }} />
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(140, 45, 66, 0.8), rgba(212, 175, 55, 0.6), transparent)' }} />
+            </div>
+
+            {/* Humorous & Warm Headings */}
+            <h2
+              style={{
+                fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
+                fontSize: '22px',
+                color: '#4a121e',
+                margin: '0 0 4px 0',
+                fontWeight: '500',
+              }}
+            >
+              नाच, गाना और ढेर सारा जश्न!
+            </h2>
+
+            <p
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontSize: '30px',
+                color: '#8c2d42',
+                margin: '0 0 12px 0',
+                lineHeight: '1.2',
+              }}
+            >
+              आपका बेसब्री से इंतज़ार रहेगा!
+            </p>
+
+            <p
+              style={{
+                fontSize: '12.5px',
+                color: '#683f49',
+                lineHeight: '1.65',
+                margin: '0 auto 18px auto',
+                maxWidth: '380px',
+                fontFamily: "'Noto Serif Devanagari', serif",
+              }}
+            >
+              पूरी ऊर्जा और डांस के मूड के साथ पधारें! डांस फ्लोर पर खराब डांस करने वालों का विशेष स्वागत है। और हां, अगर कोई पूछे कि चौथी प्लेट गुलाब जामुन क्यों ले रहे हैं, तो कह दीजिएगा कि दूल्हा-दुल्हन ने खुद आदेश दिया है! 🍨
+            </p>
+
+            {/* Funny Modern Pill Badges */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '8px',
+                flexWrap: 'wrap',
+                marginBottom: '20px',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: '600',
+                  color: '#573d03',
+                  background: 'rgba(255, 243, 205, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  padding: '5px 12px',
+                  borderRadius: '9999px',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  boxShadow: '0 2px 6px rgba(180, 130, 20, 0.08), inset 0 1px 1px #fff',
+                  fontFamily: "'Noto Serif Devanagari', serif",
+                }}
+              >
+                🍨 अनलिमिटेड मिठाई
+              </span>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: '600',
+                  color: '#14452f',
+                  background: 'rgba(209, 250, 229, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  padding: '5px 12px',
+                  borderRadius: '9999px',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  boxShadow: '0 2px 6px rgba(46, 125, 50, 0.08), inset 0 1px 1px #fff',
+                  fontFamily: "'Noto Serif Devanagari', serif",
+                }}
+              >
+                🥁 धमाकेदार ढोल
+              </span>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: '600',
+                  color: '#4a154b',
+                  background: 'rgba(243, 232, 255, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  padding: '5px 12px',
+                  borderRadius: '9999px',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  boxShadow: '0 2px 6px rgba(106, 27, 154, 0.08), inset 0 1px 1px #fff',
+                  fontFamily: "'Noto Serif Devanagari', serif",
+                }}
+              >
+                💃 खुलकर नाचें
+              </span>
+            </div>
+
+            {/* Modern Stylish Bottom Line Divider */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                margin: '0 auto 16px auto',
+                maxWidth: '260px',
+              }}
+            >
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), rgba(140, 45, 66, 0.8))' }} />
+              <span style={{ fontSize: '11px', color: '#8c2d42' }}>♥</span>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(140, 45, 66, 0.8), rgba(212, 175, 55, 0.6), transparent)' }} />
+            </div>
+
+            {/* Witty Sign-off */}
+            <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: '0 0 4px 0', fontStyle: 'italic', fontFamily: "'Noto Serif Devanagari', serif" }}>
+              ढेर सारे प्यार और बिना किसी औपचारिकता के,
+            </p>
+            <p style={{ fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif", fontSize: '20px', color: '#4a121e', margin: 0, fontWeight: '500' }}>
+              हर्ष एवं रुतबी 💕
+            </p>
+          </section>
+
+          {/* 14. Blessing Closing Plaque */}
+          <section
+            style={{
+              ...sectionCardStyle,
+              background: 'linear-gradient(135deg, rgba(140, 45, 66, 0.92) 0%, rgba(110, 28, 46, 0.88) 100%)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.35)',
+              boxShadow: '0 20px 48px -8px rgba(115, 35, 53, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(212, 175, 55, 0.35)',
+            }}
+          >
             <h2
               style={{
                 fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
