@@ -1271,7 +1271,7 @@ export default function WeddingInvitation() {
                   </span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#573d03', margin: 0, lineHeight: '1.55' }}>
-                  Yellows, pastels, or soft pinks! Just pick something you wouldn’t mind getting a tiny bit of haldi on - turmeric is notorious for finding its way everywhere! 🌸
+                  Yellows or shades of pink! Just pick something you wouldn’t mind getting a tiny bit of haldi on - turmeric is notorious for finding its way everywhere! 🌸
                 </p>
               </div>
 

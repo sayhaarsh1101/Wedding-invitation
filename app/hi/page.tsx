@@ -1304,7 +1304,7 @@ export default function HindiWeddingInvitation() {
                   </span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#573d03', margin: 0, lineHeight: '1.55', fontFamily: "'Noto Serif Devanagari', serif" }}>
-                  पीला, हल्का गुलाबी या पेस्टल रंग! बस ऐसे कपड़े चुनें जिन पर थोड़ी हल्दी लग भी जाए तो कोई फिक्र न हो। 🌸
+                  पीले या गुलाबी रंग के खूबसूरत शेड्स! बस ऐसे कपड़े चुनें जिन पर थोड़ी हल्दी लग भी जाए तो कोई फ़िक्र न हो — हल्दी तो कहीं भी पहुंच जाने के लिए मशहूर है! 🌸
                 </p>
               </div>
 
