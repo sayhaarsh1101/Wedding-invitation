@@ -1271,7 +1271,7 @@ export default function WeddingInvitation() {
                   </span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#573d03', margin: 0, lineHeight: '1.55' }}>
-                  Yellows, pastels, or soft pinks! Just pick something you wouldn’t mind getting a tiny bit of haldi on — turmeric is notorious for finding its way everywhere! 🌸
+                  Yellows, pastels, or soft pinks! Just pick something you wouldn’t mind getting a tiny bit of haldi on - turmeric is notorious for finding its way everywhere! 🌸
                 </p>
               </div>
 
@@ -1318,7 +1318,7 @@ export default function WeddingInvitation() {
                   </span>
                 </div>
                 <p style={{ fontSize: '12px', color: '#1b4332', margin: 0, lineHeight: '1.55' }}>
-                  Any shade of green you love! Outfits with easy-to-roll sleeves are always a smart choice while henna sets. 🍃
+                  Any shade of green you love! Outfits with easy-to-roll sleeves are always a smart choice while henna sets. 🌿
                 </p>
               </div>
 
