@@ -60,20 +60,20 @@ const FloatingPetals = () => {
   );
 };
 
-/* ─── "YOU ARE INVITED" Royal Plaque ──────────────────────────────── */
+/* ─── "YOU ARE INVITED" Liquid Glass Plaque ───────────────────────── */
 const InvitedBadge = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: 'en' | 'hi' }) => (
   <motion.div
-    initial={{ opacity: 0, y: -10, x: '-50%', scale: 0.9 }}
+    initial={{ opacity: 0, y: -20, x: '-50%', scale: 0.94 }}
     animate={{
-      opacity: isOpening ? 0.2 : 1,
+      opacity: isOpening ? 0.15 : 1,
       y: isOpening ? -35 : 0,
       x: '-50%',
       scale: isOpening ? 0.85 : 1,
     }}
-    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+    transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
     style={{
       position: 'absolute',
-      top: '11%',
+      top: '10.5%',
       left: '50%',
       zIndex: 25,
       textAlign: 'center',
@@ -82,36 +82,59 @@ const InvitedBadge = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: '
     }}
   >
     <div
+      className="liquid-glass-plaque-floating"
       style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.94) 0%, rgba(255,248,242,0.9) 100%)',
-        border: '1.5px solid rgba(212, 175, 55, 0.75)',
-        borderRadius: '26px',
-        padding: lang === 'hi' ? '8px 22px' : '7px 24px 9px',
-        boxShadow: '0 8px 25px rgba(120, 40, 60, 0.22), inset 0 1px 2px rgba(255,255,255,0.95)',
-        backdropFilter: 'blur(8px)',
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 249, 240, 0.36) 50%, rgba(254, 243, 225, 0.46) 100%)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.85)',
+        borderRadius: '28px',
+        padding: lang === 'hi' ? '9px 26px 10px' : '8px 28px 10px',
+        boxShadow: '0 14px 34px -4px rgba(35, 10, 16, 0.32), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(212, 175, 55, 0.22), 0 0 0 1px rgba(212, 175, 55, 0.28)',
       }}
     >
+      {/* Specular gloss top highlight */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '46%',
+          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%)',
+          borderRadius: '28px 28px 0 0',
+          pointerEvents: 'none',
+        }}
+      />
       {lang === 'hi' ? (
         <>
           <p
             style={{
+              position: 'relative',
+              zIndex: 2,
               fontFamily: "'Noto Serif Devanagari', serif",
               fontSize: '11px',
-              letterSpacing: '0.15em',
+              letterSpacing: '0.16em',
               fontWeight: '700',
-              color: '#8c2d42',
+              color: '#6e1e30',
               margin: '0 0 2px 0',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.7)',
             }}
           >
             ॥ श्री गणेशाय नमः ॥
           </p>
           <p
             style={{
+              position: 'relative',
+              zIndex: 2,
               fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
               fontSize: '20px',
-              color: '#7a2335',
+              color: '#7a1f33',
               margin: 0,
               lineHeight: '1.1',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.8)',
             }}
           >
             सादर निमंत्रण
@@ -121,24 +144,30 @@ const InvitedBadge = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: '
         <>
           <p
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: '9.5px',
-              letterSpacing: '0.3em',
+              position: 'relative',
+              zIndex: 2,
+              fontFamily: "'Cinzel', serif",
+              fontSize: '10px',
+              letterSpacing: '0.36em',
               fontWeight: '700',
-              color: '#8c2d42',
+              color: '#6e1e30',
               margin: '0 0 2px 0',
               textTransform: 'uppercase',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.7)',
             }}
           >
             You Are
           </p>
           <p
             style={{
+              position: 'relative',
+              zIndex: 2,
               fontFamily: "'Great Vibes', cursive",
-              fontSize: '26px',
-              color: '#7a2335',
+              fontSize: '27px',
+              color: '#7a1f33',
               margin: 0,
               lineHeight: '1.05',
+              textShadow: '0 1px 3px rgba(255, 255, 255, 0.85)',
             }}
           >
             Invited
@@ -152,31 +181,33 @@ const InvitedBadge = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: '
 /* ─── "With the blessings..." Calligraphy ─────────────────────────── */
 const BlessingsText = ({ isOpening, lang = 'en' }: { isOpening: boolean; lang?: 'en' | 'hi' }) => (
   <motion.div
-    initial={{ opacity: 0, y: 10, x: '-50%' }}
+    initial={{ opacity: 0, y: 14, x: '-50%' }}
     animate={{
       opacity: isOpening ? 0 : 1,
       y: isOpening ? 10 : 0,
       x: '-50%',
     }}
-    transition={{ duration: 0.4 }}
+    transition={{ duration: 0.7, ease: 'easeOut', delay: 0.6 }}
     style={{
       position: 'absolute',
-      bottom: '11%',
+      bottom: '10.8%',
       left: '50%',
       zIndex: 25,
       textAlign: 'center',
-      width: '90%',
+      width: '92%',
+      maxWidth: '360px',
       pointerEvents: 'none',
     }}
   >
     <p
       style={{
         fontFamily: lang === 'hi' ? "'Noto Serif Devanagari', serif" : "'Great Vibes', cursive",
-        fontSize: lang === 'hi' ? '14px' : '19px',
-        color: '#ffffff',
+        fontSize: lang === 'hi' ? '14px' : '20px',
+        color: '#fffbf2',
         margin: 0,
-        textShadow: '0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0,0,0,0.7)',
-        letterSpacing: lang === 'hi' ? '0.04em' : 'normal',
+        textShadow: '0 2px 10px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 20px rgba(212, 175, 55, 0.25)',
+        letterSpacing: lang === 'hi' ? '0.04em' : '0.02em',
+        lineHeight: 1.3,
       }}
     >
       {lang === 'hi'
@@ -194,7 +225,7 @@ export default function EnvelopeIntro({ onStartOpen, onOpen, lang = 'en' }: Enve
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowHint(true), 400);
+    const timer = setTimeout(() => setShowHint(true), 650);
     return () => clearTimeout(timer);
   }, []);
 
@@ -229,9 +260,10 @@ export default function EnvelopeIntro({ onStartOpen, onOpen, lang = 'en' }: Enve
     <AnimatePresence>
       <motion.div
         key="cinematic-palace-3d-gate"
-        initial={{ opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         onClick={handleOpenDoors}
         style={{
           position: 'fixed',
@@ -487,64 +519,115 @@ export default function EnvelopeIntro({ onStartOpen, onOpen, lang = 'en' }: Enve
           {/* ══ LAYER 6: BLESSINGS TEXT ══ */}
           <BlessingsText isOpening={isOpening} lang={lang} />
 
-          {/* ══ LAYER 7: INTERACTIVE "TAP TO OPEN" BUTTON ══ */}
+          {/* ══ LAYER 7: INTERACTIVE LIQUID GLASS "TAP TO OPEN" BUTTON ══ */}
           <AnimatePresence>
             {!isOpening && (
               <motion.div
                 key="open-button"
-                initial={{ opacity: 0, y: 15, x: '-50%', scale: 0.95 }}
+                initial={{ opacity: 0, y: 22, x: '-50%', scale: 0.94 }}
                 animate={{
                   opacity: showHint ? 1 : 0,
-                  y: showHint ? 0 : 15,
+                  y: showHint ? 0 : 22,
                   x: '-50%',
                   scale: 1,
                 }}
-                exit={{ opacity: 0, scale: 0.9, y: 10, x: '-50%' }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, scale: 0.9, y: 12, x: '-50%' }}
+                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   position: 'absolute',
-                  bottom: '3.5%',
+                  bottom: 'max(3.8%, env(safe-area-inset-bottom, 18px))',
                   left: '50%',
                   zIndex: 30,
-                  width: '82%',
-                  maxWidth: '290px',
+                  width: '84%',
+                  maxWidth: '295px',
                 }}
               >
                 <motion.button
                   whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  animate={{
-                    boxShadow: [
-                      '0 4px 20px rgba(212, 175, 55, 0.4)',
-                      '0 6px 30px rgba(212, 175, 55, 0.75)',
-                      '0 4px 20px rgba(212, 175, 55, 0.4)',
-                    ],
+                  whileTap={{ scale: 0.965 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenDoors();
                   }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
+                  className="liquid-glass-button-glow"
+                  aria-label={lang === 'hi' ? 'निमंत्रण पत्र खोलें' : 'Tap to open wedding invitation'}
                   style={{
+                    position: 'relative',
                     width: '100%',
-                    padding: '12px 20px',
-                    borderRadius: '28px',
-                    border: '1.5px solid rgba(255, 255, 255, 0.85)',
-                    background: 'linear-gradient(135deg, #d4af37 0%, #f7df87 50%, #c9a024 100%)',
-                    color: '#4a1525',
-                    fontFamily: lang === 'hi' ? "'Noto Serif Devanagari', serif" : "'Playfair Display', serif",
+                    padding: '13px 22px',
+                    borderRadius: '32px',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(255, 255, 255, 0.68)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.40) 0%, rgba(255, 248, 235, 0.20) 50%, rgba(255, 255, 255, 0.28) 100%)',
+                    backdropFilter: 'blur(20px) saturate(190%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(190%)',
+                    boxShadow: '0 12px 34px -4px rgba(0, 0, 0, 0.45), 0 0 20px 2px rgba(212, 175, 55, 0.20), inset 0 1.5px 2.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1.5px 2px 0 rgba(212, 175, 55, 0.25), 0 0 0 1px rgba(212, 175, 55, 0.32)',
+                    color: '#ffffff',
+                    fontFamily: lang === 'hi' ? "'Noto Serif Devanagari', serif" : "'Cinzel', serif",
                     fontSize: lang === 'hi' ? '14px' : '13px',
                     fontWeight: '700',
-                    letterSpacing: lang === 'hi' ? '0.08em' : '0.18em',
-                    textTransform: lang === 'hi' ? 'none' : 'uppercase',
+                    letterSpacing: lang === 'hi' ? '0.10em' : '0.26em',
+                    textTransform: 'uppercase',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '8px',
+                    outline: 'none',
+                    WebkitTapHighlightColor: 'transparent',
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 235, 170, 0.45)',
+                    transition: 'border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 248, 232, 0.30) 50%, rgba(255, 255, 255, 0.38) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.92)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.40) 0%, rgba(255, 248, 235, 0.20) 50%, rgba(255, 255, 255, 0.28) 100%)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.68)';
                   }}
                 >
-                  <span>{lang === 'hi' ? '✦ निमंत्रण पत्र खोलें ✦' : '✦ Tap to Open ✦'}</span>
+                  {/* Top Specular Arc Highlight */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: '8%',
+                      right: '8%',
+                      height: '48%',
+                      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0) 100%)',
+                      borderRadius: '32px 32px 100px 100px',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Moving diagonal light shimmer */}
+                  <div
+                    className="liquid-glass-shimmer-beam"
+                    style={{
+                      position: 'absolute',
+                      top: '-60%',
+                      bottom: '-60%',
+                      left: 0,
+                      width: '60px',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%)',
+                      transform: 'skewX(-25deg)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Button Label */}
+                  <span
+                    style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    {lang === 'hi' ? '✦ निमंत्रण पत्र खोलें ✦' : '✦ TAP TO OPEN ✦'}
+                  </span>
                 </motion.button>
               </motion.div>
             )}

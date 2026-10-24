@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Plus_Jakarta_Sans, Great_Vibes, Rozha_One, Noto_Serif_Devanagari } from "next/font/google";
+import { Playfair_Display, Outfit, Cinzel, Great_Vibes, Rozha_One, Noto_Serif_Devanagari } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -8,10 +8,18 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jakarta",
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-cinzel",
+  weight: ["500", "600", "700", "800"],
 });
 
 const vibes = Great_Vibes({
@@ -67,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${vibes.variable} ${rozha.variable} ${notoHindi.variable}`}>
-      <body className={`${jakarta.className} antialiased bg-[#fbf4f6] text-[#4a232b] selection:bg-[#d4af37] selection:text-[#2b0a0f]`}>
+    <html lang="en" className={`${playfair.variable} ${outfit.variable} ${cinzel.variable} ${vibes.variable} ${rozha.variable} ${notoHindi.variable}`}>
+      <body className={`${outfit.className} antialiased bg-[#fbf4f6] text-[#381119] font-medium selection:bg-[#d4af37] selection:text-[#2b0a0f]`}>
         {children}
       </body>
     </html>

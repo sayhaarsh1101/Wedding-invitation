@@ -240,8 +240,9 @@ export default function WeddingInvitation() {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(180deg, #fdf6f7 0%, #faedf0 35%, #fff5ea 70%, #fcf0f2 100%)',
-        color: '#4a232b',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        color: '#3b111a',
+        fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
+        fontWeight: '500',
         position: 'relative',
         paddingBottom: '80px',
         overflowX: 'hidden',
@@ -368,48 +369,105 @@ export default function WeddingInvitation() {
 
             {/* Top Ornamental Crest */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', position: 'relative', zIndex: 2 }}>
+              {/* Liquid Glass Monogram Medallion */}
               <div
                 style={{
-                  width: '64px',
-                  height: '64px',
+                  position: 'relative',
+                  width: '74px',
+                  height: '74px',
                   borderRadius: '50%',
                   border: '1px solid rgba(255, 255, 255, 0.95)',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 243, 199, 0.5) 100%)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(254, 245, 225, 0.45) 50%, rgba(255, 255, 255, 0.70) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 8px 20px -4px rgba(212, 175, 55, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)',
+                  boxShadow: '0 10px 24px -4px rgba(140, 45, 66, 0.18), 0 0 16px 1px rgba(212, 175, 55, 0.22), inset 0 1.5px 2.5px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.25), 0 0 0 1px rgba(212, 175, 55, 0.3)',
                   marginBottom: '10px',
+                  overflow: 'hidden',
                 }}
               >
+                {/* Top specular reflection arc */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '10%',
+                    right: '10%',
+                    height: '46%',
+                    background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 100%)',
+                    borderRadius: '50px 50px 0 0',
+                    pointerEvents: 'none',
+                  }}
+                />
                 <span
                   style={{
+                    position: 'relative',
+                    zIndex: 2,
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: '22px',
+                    fontSize: '18px',
                     fontWeight: '700',
                     color: '#8c2d42',
+                    letterSpacing: '0.04em',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    lineHeight: 1,
                   }}
                 >
-                  H &amp; R
+                  H <span style={{ fontStyle: 'italic', fontFamily: "'Great Vibes', cursive", fontSize: '20px', color: '#c49a2c' }}>&amp;</span> R
                 </span>
               </div>
 
-              <p
+              {/* Liquid Glass Auspicious Invocation Badge */}
+              <div
                 style={{
-                  fontSize: '9px',
-                  letterSpacing: '0.28em',
-                  color: '#8c2d42',
-                  fontWeight: '700',
-                  textTransform: 'uppercase',
-                  margin: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(255, 255, 255, 0.78)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  borderRadius: '9999px',
+                  padding: '5px 16px',
+                  boxShadow: '0 3px 12px rgba(140, 45, 66, 0.09), inset 0 1px 1.5px rgba(255, 255, 255, 1)',
+                  margin: '0 auto',
                 }}
               >
-                Royal Wedding Invitation
-              </p>
+                <span style={{ fontSize: '11px', color: '#b45309' }}>✨</span>
+                <p
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    fontSize: '11px',
+                    letterSpacing: '0.14em',
+                    color: '#8c2d42',
+                    fontWeight: '700',
+                    margin: 0,
+                  }}
+                >
+                  ॥ Shree Ganeshaya Namah ॥
+                </p>
+                <span style={{ fontSize: '11px', color: '#b45309' }}>✨</span>
+              </div>
 
-              <div style={{ width: '40px', height: '1px', backgroundColor: '#d4af37', margin: '10px auto' }} />
+              {/* Radiant Hairline Divider */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  margin: '12px auto 14px auto',
+                  maxWidth: '180px',
+                }}
+              >
+                <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.8))' }} />
+                <span style={{ color: '#8c2d42', fontSize: '9px' }}>♥</span>
+                <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.8), transparent)' }} />
+              </div>
 
               <p
                 style={{
@@ -433,6 +491,7 @@ export default function WeddingInvitation() {
                   margin: '4px 0 12px 0',
                   fontWeight: 'normal',
                   lineHeight: '1.15',
+                  textShadow: '0 2px 12px rgba(140, 45, 66, 0.08)',
                 }}
               >
                 Harsh &amp; Rutbi
@@ -449,16 +508,49 @@ export default function WeddingInvitation() {
                 />
               </div>
 
-              {/* Venue Subtitle */}
-              <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.18em', color: '#8c2d42', fontWeight: '700', margin: '8px 0 4px 0' }}>
-                To Be Held At
-              </p>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '17px', color: '#4a1525', margin: '0 0 4px 0', fontWeight: '600' }}>
-                {venueName}
-              </h3>
-              <p style={{ fontSize: '11px', color: '#7a4e58', margin: '0 0 16px 0' }}>
-                {venueAddress}
-              </p>
+              {/* Venue Liquid Glass Pod */}
+              <div
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  marginBottom: '10px',
+                  padding: '14px 18px',
+                  borderRadius: '22px',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(254, 243, 225, 0.42) 100%)',
+                  backdropFilter: 'blur(20px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.95)',
+                  boxShadow: '0 10px 28px -6px rgba(140, 45, 66, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.16)',
+                  textAlign: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    fontSize: '9.5px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.18em',
+                    color: '#8c2d42',
+                    fontWeight: '700',
+                    background: 'rgba(255, 243, 205, 0.7)',
+                    padding: '3px 10px',
+                    borderRadius: '9999px',
+                    marginBottom: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.9)',
+                  }}
+                >
+                  <span>📍</span>
+                  <span>To Be Held At</span>
+                </div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '17px', color: '#4a1525', margin: '0 0 4px 0', fontWeight: '700' }}>
+                  {venueName}
+                </h3>
+                <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: 0, lineHeight: '1.45' }}>
+                  {venueAddress}
+                </p>
+              </div>
             </div>
 
             {/* Palace Garden Architectural Illustration */}
@@ -469,12 +561,35 @@ export default function WeddingInvitation() {
               </svg>
             </div>
 
-            {/* Scroll Indicator */}
-            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.7 }}>
-              <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.25em', color: '#8c2d42' }}>
-                Scroll for Itinerary
-              </span>
-              <ChevronDown size={14} color="#8c2d42" className="animate-bounce mt-1" />
+            {/* Scroll Indicator with Liquid Glass Pill */}
+            <div
+              style={{
+                marginTop: '14px',
+                display: 'inline-flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '2px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(255, 255, 255, 0.72)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.9)',
+                  padding: '5px 14px',
+                  borderRadius: '9999px',
+                  boxShadow: '0 2px 8px rgba(140, 45, 66, 0.08), inset 0 1px 1px #fff',
+                }}
+              >
+                <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.22em', color: '#8c2d42', fontWeight: '700' }}>
+                  Scroll for Itinerary
+                </span>
+                <ChevronDown size={13} color="#8c2d42" className="animate-bounce" />
+              </div>
             </div>
           </motion.section>
 

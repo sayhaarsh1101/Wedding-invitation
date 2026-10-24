@@ -286,7 +286,7 @@ export default function HeartScratchCard({
     ctx.fillText(foilHeader, cx, cy + 38);
 
     // 7. Foil Subtitle (Soft italic)
-    ctx.font = '500 10px "Plus Jakarta Sans", "Noto Serif Devanagari", sans-serif';
+    ctx.font = '600 10.5px "Outfit", "Noto Serif Devanagari", sans-serif';
     ctx.fillStyle = '#6b430e';
     ctx.fillText(foilSubtitle, cx, cy + 54);
   }, [foilHeader, foilSubtitle]);
@@ -447,12 +447,12 @@ export default function HeartScratchCard({
             animate={isRevealed ? { y: 0, opacity: 1 } : { y: 0, opacity: 0.6 }}
             transition={{ delay: isRevealed ? 0.45 : 0, duration: 0.5 }}
             style={{
-              fontSize: '10px',
+              fontSize: '10.5px',
               letterSpacing: '0.04em',
               color: '#f8bbd0',
               margin: 0,
-              fontWeight: '500',
-              fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
+              fontWeight: '600',
+              fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
             }}
           >
             📍 {venueText}
@@ -568,7 +568,7 @@ export default function HeartScratchCard({
             display: 'flex',
             alignItems: 'center',
             gap: '5px',
-            fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
+            fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
           }}
         >
           {isRevealed ? (

@@ -242,8 +242,9 @@ export default function HindiWeddingInvitation() {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(180deg, #fdf6f7 0%, #faedf0 35%, #fff5ea 70%, #fcf0f2 100%)',
-        color: '#4a1525',
-        fontFamily: "'Noto Serif Devanagari', 'Plus Jakarta Sans', sans-serif",
+        color: '#381119',
+        fontFamily: "'Noto Serif Devanagari', 'Outfit', sans-serif",
+        fontWeight: '500',
         position: 'relative',
         paddingBottom: '80px',
         overflowX: 'hidden',
@@ -370,26 +371,45 @@ export default function HindiWeddingInvitation() {
             {/* Monogram Crest with Liquid Glass Finish */}
             <div
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '56px',
-                height: '56px',
+                position: 'relative',
+                width: '74px',
+                height: '74px',
                 borderRadius: '50%',
                 border: '1px solid rgba(255, 255, 255, 0.95)',
                 margin: '0 auto 10px auto',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 243, 199, 0.5) 100%)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                boxShadow: '0 8px 20px -4px rgba(212, 175, 55, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(254, 245, 225, 0.45) 50%, rgba(255, 255, 255, 0.70) 100%)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 10px 24px -4px rgba(140, 45, 66, 0.18), 0 0 16px 1px rgba(212, 175, 55, 0.22), inset 0 1.5px 2.5px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.25), 0 0 0 1px rgba(212, 175, 55, 0.3)',
+                overflow: 'hidden',
               }}
             >
+              {/* Top specular reflection arc */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '10%',
+                  right: '10%',
+                  height: '46%',
+                  background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 100%)',
+                  borderRadius: '50px 50px 0 0',
+                  pointerEvents: 'none',
+                }}
+              />
               <span
                 style={{
+                  position: 'relative',
+                  zIndex: 2,
                   fontFamily: "'Rozha One', 'Noto Serif Devanagari', serif",
                   fontSize: '18px',
                   color: '#8c2d42',
                   fontWeight: '600',
+                  whiteSpace: 'nowrap',
+                  lineHeight: 1,
                 }}
               >
                 ह &amp; रु
@@ -496,18 +516,41 @@ export default function HindiWeddingInvitation() {
               />
             </div>
 
-            {/* Venue Location Text */}
+            {/* Venue Location Liquid Glass Pod */}
             <div
               style={{
-                backgroundColor: 'rgba(255, 245, 247, 0.85)',
-                border: '1px solid #f0d5db',
-                borderRadius: '16px',
-                padding: '16px',
-                margin: '18px 0 12px 0',
+                width: '100%',
+                marginTop: '16px',
+                marginBottom: '12px',
+                padding: '16px 18px',
+                borderRadius: '22px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(254, 243, 225, 0.42) 100%)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                border: '1px solid rgba(255, 255, 255, 0.95)',
+                boxShadow: '0 10px 28px -6px rgba(140, 45, 66, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.16)',
+                textAlign: 'center',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 4px 0' }}>
-                <MapPin size={18} color="#8c2d42" />
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  fontSize: '9.5px',
+                  letterSpacing: '0.12em',
+                  color: '#8c2d42',
+                  fontWeight: '700',
+                  background: 'rgba(255, 243, 205, 0.7)',
+                  padding: '3px 10px',
+                  borderRadius: '9999px',
+                  marginBottom: '8px',
+                  border: '1px solid rgba(255, 255, 255, 0.9)',
+                  fontFamily: "'Noto Serif Devanagari', serif",
+                }}
+              >
+                <span>📍</span>
+                <span>विवाह स्थल</span>
               </div>
               <p
                 style={{
@@ -520,7 +563,7 @@ export default function HindiWeddingInvitation() {
               >
                 {venueName}
               </p>
-              <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: '0 0 12px 0', lineHeight: '1.5' }}>
+              <p style={{ fontSize: '11.5px', color: '#7a4e58', margin: '0 0 12px 0', lineHeight: '1.5', fontFamily: "'Noto Serif Devanagari', serif" }}>
                 {venueAddress}
               </p>
               <a
@@ -529,14 +572,16 @@ export default function HindiWeddingInvitation() {
                 rel="noopener noreferrer"
                 style={{
                   display: 'inline-block',
-                  backgroundColor: '#732335',
+                  background: 'linear-gradient(135deg, #8c2d42 0%, #681829 100%)',
                   color: '#ffffff',
-                  padding: '8px 18px',
-                  borderRadius: '20px',
+                  padding: '8px 20px',
+                  borderRadius: '9999px',
                   fontSize: '11px',
                   fontWeight: '600',
                   textDecoration: 'none',
-                  boxShadow: '0 4px 12px rgba(115, 35, 53, 0.15)',
+                  boxShadow: '0 4px 14px rgba(115, 35, 53, 0.25)',
+                  border: '1px solid rgba(255, 255, 255, 0.4)',
+                  fontFamily: "'Noto Serif Devanagari', serif",
                 }}
               >
                 गूगल मैप्स पर देखें ➔
@@ -544,7 +589,22 @@ export default function HindiWeddingInvitation() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '14px' }}>
-              <ChevronDown size={22} color="#8c2d42" className="animate-bounce" />
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(255, 255, 255, 0.72)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.9)',
+                  padding: '5px 14px',
+                  borderRadius: '9999px',
+                  boxShadow: '0 2px 8px rgba(140, 45, 66, 0.08), inset 0 1px 1px #fff',
+                }}
+              >
+                <ChevronDown size={18} color="#8c2d42" className="animate-bounce" />
+              </div>
             </div>
           </motion.section>
 
