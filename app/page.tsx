@@ -47,20 +47,6 @@ export default function WeddingInvitation() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [showScrollPrompt, setShowScrollPrompt] = useState(true);
-
-  // Auto-dismiss floating scroll prompt once user scrolls past hero section
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 80) {
-        setShowScrollPrompt(false);
-      } else {
-        setShowScrollPrompt(true);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToCelebrations = () => {
     const target = document.getElementById('wedding-details-start');
@@ -322,52 +308,7 @@ export default function WeddingInvitation() {
         </button>
       )}
 
-      {/* Floating Bottom Scroll Cue (Presents an obvious prompt to scroll down) */}
-      <AnimatePresence>
-        {isOpen && showScrollPrompt && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            onClick={scrollToCelebrations}
-            style={{
-              position: 'fixed',
-              bottom: '22px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 55,
-              cursor: 'pointer',
-              maxWidth: 'calc(100vw - 110px)',
-            }}
-          >
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 243, 205, 0.9) 100%)',
-                backdropFilter: 'blur(20px) saturate(190%)',
-                WebkitBackdropFilter: 'blur(20px) saturate(190%)',
-                border: '1.5px solid rgba(212, 175, 55, 0.8)',
-                borderRadius: '9999px',
-                padding: '8px 18px',
-                boxShadow: '0 8px 24px -4px rgba(140, 45, 66, 0.3), 0 0 16px rgba(212, 175, 55, 0.25), inset 0 1.5px 2px #fff',
-                color: '#8c2d42',
-                fontSize: '10.5px',
-                fontWeight: '700',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <span style={{ fontSize: '13px' }}>👇</span>
-              <span>Scroll for Events &amp; Details</span>
-              <ChevronDown size={14} color="#8c2d42" className="animate-bounce" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
 
       {/* 1. LUXURY ENVELOPE INTRO SCENE */}
       {!isOpen && (
@@ -568,39 +509,16 @@ export default function WeddingInvitation() {
               </h1>
 
               {/* Interactive Gold Foil Date Reveal */}
-              <div style={{ width: '100%', margin: '10px 0 10px 0', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ width: '100%', margin: '10px 0 14px 0', display: 'flex', justifyContent: 'center' }}>
                 <HeartScratchCard
                   dateText="WEDNESDAY, DEC 09, 2026"
                   venueText="Hotel Nalanda Regency, Rajgir"
                   foilHeader="Mark Your Calendar, Ji! 📅"
                   foilSubtitle="Tap or scratch to reveal"
                   swipeToScratchText="✨ Tap or scratch to reveal"
-                  scrollCueText="Scroll down to explore celebrations"
-                  scrollButtonText="Scroll for Itinerary & Celebrations"
+                  scrollButtonText="View Events & Itinerary"
                   onScrollRequest={scrollToCelebrations}
                 />
-              </div>
-
-              {/* Subtle Scroll Cue Pill below scratch card */}
-              <div
-                onClick={scrollToCelebrations}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  margin: '2px auto 8px auto',
-                  padding: '4px 14px',
-                  borderRadius: '9999px',
-                  background: 'rgba(255, 255, 255, 0.72)',
-                  border: '1px solid rgba(212, 175, 55, 0.45)',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(140, 45, 66, 0.06)',
-                }}
-              >
-                <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.16em', color: '#8c2d42', fontWeight: '700' }}>
-                  Scroll for Venue &amp; Events
-                </span>
-                <ChevronDown size={12} color="#8c2d42" className="animate-bounce" />
               </div>
 
               {/* Venue Liquid Glass Pod */}

@@ -643,55 +643,26 @@ export default function HeartScratchCard({
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
-              gap: '4px',
-              width: '100%',
+              justifyContent: 'center',
+              marginTop: '4px',
+              minHeight: '20px',
             }}
           >
             <span
               style={{
-                fontSize: '10.5px',
+                fontSize: '11px',
                 color: '#8c2d42',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '5px',
                 fontWeight: '600',
+                letterSpacing: '0.02em',
                 fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
               }}
             >
               <Sparkles size={12} color="#d4af37" className="animate-spin-slow" />
               {swipeToScratchText}
-            </span>
-
-            <span
-              onClick={() => {
-                if (onScrollRequest) {
-                  onScrollRequest();
-                } else {
-                  const target = document.getElementById('wedding-details-start');
-                  if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    window.scrollBy({ top: 400, behavior: 'smooth' });
-                  }
-                }
-              }}
-              style={{
-                fontSize: '9.5px',
-                color: '#9a3412',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                letterSpacing: '0.03em',
-                opacity: 0.9,
-                fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
-              }}
-            >
-              <span>{scrollCueText}</span>
-              <ChevronDown size={11} color="#9a3412" className="animate-bounce" />
             </span>
           </div>
         )}
