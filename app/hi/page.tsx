@@ -47,6 +47,29 @@ export default function HindiWeddingInvitation() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showScrollPrompt, setShowScrollPrompt] = useState(true);
+
+  // Auto-dismiss floating scroll prompt once user scrolls past hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 80) {
+        setShowScrollPrompt(false);
+      } else {
+        setShowScrollPrompt(true);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToCelebrations = () => {
+    const target = document.getElementById('wedding-details-start');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollBy({ top: 400, behavior: 'smooth' });
+    }
+  };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wasPlayingBeforeHiddenRef = useRef<boolean>(false);
@@ -301,6 +324,52 @@ export default function HindiWeddingInvitation() {
         </button>
       )}
 
+      {/* Floating Bottom Scroll Cue (Hindi) */}
+      <AnimatePresence>
+        {isOpen && showScrollPrompt && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            onClick={scrollToCelebrations}
+            style={{
+              position: 'fixed',
+              bottom: '22px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 55,
+              cursor: 'pointer',
+              maxWidth: 'calc(100vw - 110px)',
+            }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 243, 205, 0.9) 100%)',
+                backdropFilter: 'blur(20px) saturate(190%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(190%)',
+                border: '1.5px solid rgba(212, 175, 55, 0.8)',
+                borderRadius: '9999px',
+                padding: '8px 18px',
+                boxShadow: '0 8px 24px -4px rgba(140, 45, 66, 0.28), 0 0 16px rgba(212, 175, 55, 0.25), inset 0 1.5px 2px #fff',
+                color: '#8c2d42',
+                fontSize: '11px',
+                fontWeight: '700',
+                fontFamily: "'Noto Serif Devanagari', serif",
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span style={{ fontSize: '13px' }}>👇</span>
+              <span>कार्यक्रम व विवरण देखने के लिए नीचे स्क्रॉल करें</span>
+              <ChevronDown size={14} color="#8c2d42" className="animate-bounce" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 1. LUXURY ENVELOPE INTRO SCENE (Hindi) */}
       {!isOpen && (
         <EnvelopeIntro
@@ -324,8 +393,8 @@ export default function HindiWeddingInvitation() {
               borderRadius: '32px',
               border: '1px solid rgba(255, 255, 255, 0.92)',
               boxShadow: '0 24px 50px -12px rgba(138, 43, 66, 0.12), inset 0 2px 3px 0 rgba(255, 255, 255, 1), inset 0 -1.5px 2px 0 rgba(212, 175, 55, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.45)',
-              padding: '26px 20px 24px 20px',
-              marginBottom: '24px',
+              padding: '20px 18px 20px 18px',
+              marginBottom: '20px',
               textAlign: 'center',
               overflow: 'hidden',
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 248, 250, 0.58) 100%)',
@@ -502,7 +571,7 @@ export default function HindiWeddingInvitation() {
             </div>
 
             {/* ══ THE REAL SCRATCH CARD (Directly below couple names) ══ */}
-            <div style={{ margin: '18px 0 16px 0' }}>
+            <div style={{ width: '100%', margin: '10px 0 10px 0', display: 'flex', justifyContent: 'center' }}>
               <HeartScratchCard
                 dateText="बुधवार, 09 दिसम्बर 2026"
                 venueText="होटल नालंदा रीजेंसी, राजगीर"
@@ -513,7 +582,32 @@ export default function HindiWeddingInvitation() {
                 celebrateNote="आपकी गरिमामयी उपस्थिति प्रार्थनीय है 💕"
                 revealedStatusText="शुभ तिथि प्रकट! 🎉"
                 swipeToScratchText="✨ टैप या स्क्रैच करें"
+                scrollCueText="कार्यक्रम व विवरण देखने के लिए नीचे स्क्रॉल करें"
+                scrollButtonText="कार्यक्रम व अन्य विवरण देखें"
+                onScrollRequest={scrollToCelebrations}
               />
+            </div>
+
+            {/* Subtle Scroll Cue Pill below scratch card */}
+            <div
+              onClick={scrollToCelebrations}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                margin: '2px auto 8px auto',
+                padding: '4px 14px',
+                borderRadius: '9999px',
+                background: 'rgba(255, 255, 255, 0.72)',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(140, 45, 66, 0.06)',
+              }}
+            >
+              <span style={{ fontSize: '9.5px', color: '#8c2d42', fontWeight: '700', fontFamily: "'Noto Serif Devanagari', serif" }}>
+                स्थल व अन्य कार्यक्रम देखने के लिए नीचे स्क्रॉल करें
+              </span>
+              <ChevronDown size={12} color="#8c2d42" className="animate-bounce" />
             </div>
 
             {/* Venue Location Liquid Glass Pod */}
@@ -588,7 +682,10 @@ export default function HindiWeddingInvitation() {
               </a>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '14px' }}>
+            <div
+              onClick={scrollToCelebrations}
+              style={{ display: 'flex', justifyContent: 'center', marginTop: '14px', cursor: 'pointer' }}
+            >
               <div
                 style={{
                   display: 'inline-flex',
@@ -609,7 +706,7 @@ export default function HindiWeddingInvitation() {
           </motion.section>
 
           {/* 3. Shloka & Mangal Card */}
-          <section style={sectionCardStyle}>
+          <section id="wedding-details-start" style={sectionCardStyle}>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '0 0 8px 0' }}>
               <Sparkles size={20} color="#8c2d42" />
             </div>

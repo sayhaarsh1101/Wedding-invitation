@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { CheckCircle2, Sparkles } from 'lucide-react';
+import { CheckCircle2, Sparkles, ChevronDown } from 'lucide-react';
 
 interface HeartScratchCardProps {
   dateText?: string;
@@ -15,6 +15,9 @@ interface HeartScratchCardProps {
   celebrateNote?: string;
   revealedStatusText?: string;
   swipeToScratchText?: string;
+  scrollCueText?: string;
+  scrollButtonText?: string;
+  onScrollRequest?: () => void;
 }
 
 interface Particle {
@@ -37,6 +40,9 @@ export default function HeartScratchCard({
   celebrateNote = 'We eagerly await your presence!',
   revealedStatusText = 'Date Revealed! 🎉',
   swipeToScratchText = '✨ Tap or scratch to reveal',
+  scrollCueText = 'Scroll down to explore celebrations',
+  scrollButtonText = 'Scroll for Itinerary & Celebrations',
+  onScrollRequest,
 }: HeartScratchCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -548,50 +554,147 @@ export default function HeartScratchCard({
         ))}
       </motion.div>
 
-      {/* ── Status & Hint Indicator ── */}
+      {/* ── Status & Hint Indicator with Clear Scroll Cue ── */}
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          maxWidth: '310px',
+          maxWidth: '320px',
           marginTop: '10px',
           padding: '0 4px',
+          gap: '6px',
         }}
       >
-        <span
-          style={{
-            fontSize: '11px',
-            color: isRevealed ? '#2e7d32' : '#8c2d42',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
-          }}
-        >
-          {isRevealed ? (
-            <>
+        {isRevealed ? (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+              width: '100%',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px',
+                color: '#2e7d32',
+                fontWeight: '700',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
+                background: 'rgba(232, 245, 233, 0.75)',
+                padding: '3px 12px',
+                borderRadius: '9999px',
+                border: '1px solid rgba(46, 125, 50, 0.25)',
+              }}
+            >
               <CheckCircle2 size={13} color="#2e7d32" />
               <span>{revealedStatusText}</span>
-            </>
-          ) : (
+            </div>
+
+            {/* Glowing Scroll Call-to-Action Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (onScrollRequest) {
+                  onScrollRequest();
+                } else {
+                  const target = document.getElementById('wedding-details-start');
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.scrollBy({ top: 400, behavior: 'smooth' });
+                  }
+                }
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '7px',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 243, 205, 0.90) 100%)',
+                border: '1.5px solid rgba(212, 175, 55, 0.75)',
+                padding: '7px 18px',
+                borderRadius: '9999px',
+                boxShadow: '0 4px 16px rgba(212, 175, 55, 0.35), inset 0 1px 1px #fff',
+                cursor: 'pointer',
+                color: '#8c2d42',
+                fontSize: '11px',
+                fontWeight: '700',
+                letterSpacing: '0.04em',
+                fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
+                transition: 'transform 0.15s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              <span>{scrollButtonText}</span>
+              <ChevronDown size={14} color="#8c2d42" className="animate-bounce" />
+            </button>
+          </motion.div>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              width: '100%',
+            }}
+          >
             <span
               style={{
                 fontSize: '10.5px',
                 color: '#8c2d42',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
-                opacity: 0.9,
+                fontWeight: '600',
+                fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
               }}
             >
               <Sparkles size={12} color="#d4af37" className="animate-spin-slow" />
               {swipeToScratchText}
             </span>
-          )}
-        </span>
+
+            <span
+              onClick={() => {
+                if (onScrollRequest) {
+                  onScrollRequest();
+                } else {
+                  const target = document.getElementById('wedding-details-start');
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.scrollBy({ top: 400, behavior: 'smooth' });
+                  }
+                }
+              }}
+              style={{
+                fontSize: '9.5px',
+                color: '#9a3412',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                letterSpacing: '0.03em',
+                opacity: 0.9,
+                fontFamily: "'Outfit', 'Noto Serif Devanagari', sans-serif",
+              }}
+            >
+              <span>{scrollCueText}</span>
+              <ChevronDown size={11} color="#9a3412" className="animate-bounce" />
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
