@@ -55,9 +55,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/og-invite.png",
-        width: 1080,
-        height: 1920,
+        url: "/images/og-invite.jpg",
+        width: 1200,
+        height: 630,
         alt: "Harsh & Rutbi Wedding",
       },
     ],
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Harsh & Rutbi - Royal Wedding Invitation",
     description: "Join us for the wedding celebration of Harsh & Rutbi on December 9, 2026 at Hotel Nalanda Regency, Rajgir, Bihar.",
-    images: ["/images/og-invite.png"],
+    images: ["/images/og-invite.jpg"],
   },
 };
 
