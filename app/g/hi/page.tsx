@@ -199,6 +199,9 @@ export default function GroomWeddingInvitationHindi() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wasPlayingBeforeHiddenRef = useRef<boolean>(false);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceCreatedRef = useRef<boolean>(false);
 
   const weddingVenueName = 'होटल नालंदा रीजेंसी';
   const weddingVenueAddress = 'डांगी टोला, बस स्टैंड के पास, NH 82, राजगीर, बिहार - 803116';
@@ -229,9 +232,39 @@ export default function GroomWeddingInvitationHindi() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
 
+  // Setup Web Audio API GainNode for mobile-compatible volume control
+  const initAudioContext = useCallback(() => {
+    if (audioCtxRef.current || !audioRef.current) return;
+    try {
+      const ctx = new (window.AudioContext || (window as unknown as Record<string, typeof AudioContext>).webkitAudioContext)();
+      audioCtxRef.current = ctx;
+      const gainNode = ctx.createGain();
+      gainNode.gain.value = volume;
+      gainNodeRef.current = gainNode;
+      if (!sourceCreatedRef.current) {
+        const source = ctx.createMediaElementSource(audioRef.current);
+        source.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        sourceCreatedRef.current = true;
+      }
+    } catch { /* fallback: volume control won't work on this device */ }
+  }, []);
+
+  // Sync volume to GainNode whenever volume state changes
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = volume;
+    }
+    if (audioRef.current) {
+      try { audioRef.current.volume = volume; } catch { /* iOS ignores this */ }
+    }
+  }, [volume]);
+
   // Audio Lifecycle
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
+    if (audioRef.current) {
+      try { audioRef.current.volume = volume; } catch { /* iOS ignores */ }
+    }
 
     const pauseMusic = () => {
       if (audioRef.current && !audioRef.current.paused) {
@@ -241,6 +274,7 @@ export default function GroomWeddingInvitationHindi() {
     };
     const resumeMusic = () => {
       if (!document.hidden && wasPlayingBeforeHiddenRef.current && audioRef.current) {
+        if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume().catch(() => {});
         audioRef.current.play().catch(() => {});
       }
     };
@@ -267,7 +301,9 @@ export default function GroomWeddingInvitationHindi() {
 
   const handleStartOpen = async () => {
     if (audioRef.current) {
-      try { audioRef.current.volume = volume; await audioRef.current.play(); wasPlayingBeforeHiddenRef.current = true; }
+      initAudioContext();
+      if (audioCtxRef.current?.state === 'suspended') await audioCtxRef.current.resume().catch(() => {});
+      try { await audioRef.current.play(); wasPlayingBeforeHiddenRef.current = true; }
       catch { wasPlayingBeforeHiddenRef.current = false; }
     }
   };
@@ -275,13 +311,19 @@ export default function GroomWeddingInvitationHindi() {
 
   const toggleAudio = () => {
     if (!audioRef.current) return;
+    initAudioContext();
     if (!audioRef.current.paused) { audioRef.current.pause(); wasPlayingBeforeHiddenRef.current = false; }
-    else { audioRef.current.volume = volume; audioRef.current.play().catch(() => {}); wasPlayingBeforeHiddenRef.current = true; }
+    else {
+      if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume().catch(() => {});
+      audioRef.current.play().catch(() => {});
+      wasPlayingBeforeHiddenRef.current = true;
+    }
   };
 
   const handleVolumeChange = (newVol: number) => {
     setVolume(newVol);
-    if (audioRef.current) audioRef.current.volume = newVol;
+    if (gainNodeRef.current) gainNodeRef.current.gain.value = newVol;
+    if (audioRef.current) { try { audioRef.current.volume = newVol; } catch { /* iOS */ } }
   };
 
   const handleGoogleSheetsSubmit = async (e: React.FormEvent) => {
@@ -393,7 +435,7 @@ export default function GroomWeddingInvitationHindi() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'linear-gradient(180deg, #fdf6f7 0%, #fceef1 20%, #fff8f0 45%, #fdf2f5 65%, #fef6e8 85%, #fcf0f2 100%)',
         color: '#3b111a',
         fontFamily: "'Noto Serif Devanagari', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -563,7 +605,7 @@ export default function GroomWeddingInvitationHindi() {
               position: 'relative', borderRadius: '36px',
               border: '1px solid rgba(255, 255, 255, 0.92)',
               boxShadow: '0 28px 60px -14px rgba(138, 43, 66, 0.14), 0 12px 24px -8px rgba(212, 175, 55, 0.08), inset 0 2px 4px 0 rgba(255, 255, 255, 1), inset 0 -2px 3px 0 rgba(212, 175, 55, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.5)',
-              padding: '24px 20px 24px 20px', marginBottom: '28px',
+              padding: '18px 18px 16px 18px', marginBottom: '28px',
               textAlign: 'center', overflow: 'hidden',
               background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 250, 0.62) 50%, rgba(255, 250, 240, 0.45) 100%)',
               backdropFilter: 'blur(32px) saturate(200%)',
@@ -582,7 +624,7 @@ export default function GroomWeddingInvitationHindi() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              style={{ width: '100%', height: '110px', backgroundImage: 'url(/images/floral-arch.jpg)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'top center', mixBlendMode: 'multiply', marginBottom: '4px', position: 'relative', zIndex: 2 }}
+              style={{ width: '100%', height: '80px', backgroundImage: 'url(/images/floral-arch.jpg)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'top center', mixBlendMode: 'multiply', marginBottom: '0px', position: 'relative', zIndex: 2 }}
             />
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', position: 'relative', zIndex: 2 }}>
@@ -592,19 +634,19 @@ export default function GroomWeddingInvitationHindi() {
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.5, duration: 0.8, type: 'spring', stiffness: 120 }}
                 style={{
-                  position: 'relative', width: '80px', height: '80px', borderRadius: '50%',
+                  position: 'relative', width: '68px', height: '68px', borderRadius: '50%',
                   border: '2px solid rgba(212, 175, 55, 0.4)',
                   background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 245, 225, 0.5) 50%, rgba(255, 255, 255, 0.75) 100%)',
                   backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: '0 12px 28px -4px rgba(140, 45, 66, 0.2), 0 0 20px 2px rgba(212, 175, 55, 0.25), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1.5px 2px rgba(212, 175, 55, 0.3), 0 0 0 1px rgba(212, 175, 55, 0.35)',
-                  marginBottom: '12px', overflow: 'hidden',
+                  marginBottom: '8px', overflow: 'hidden',
                   animation: 'goldPulse 4s ease-in-out infinite',
                 }}
               >
                 <div style={{ position: 'absolute', top: 0, left: '8%', right: '8%', height: '48%', background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 100%)', borderRadius: '50px 50px 0 0', pointerEvents: 'none' }} />
-                <span style={{ position: 'relative', zIndex: 2, fontFamily: "'Noto Serif Devanagari', serif", fontSize: '17px', fontWeight: '700', color: '#8c2d42', letterSpacing: '0.02em', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px', lineHeight: 1 }}>
-                  ह <span style={{ fontStyle: 'italic', fontFamily: "'Great Vibes', cursive", fontSize: '22px', color: '#c49a2c' }}>&amp;</span> रु
+                <span style={{ position: 'relative', zIndex: 2, fontFamily: "'Noto Serif Devanagari', serif", fontSize: '17px', fontWeight: '700', color: '#8c2d42', letterSpacing: '0.02em', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px', lineHeight: 1 }}>
+                  ह <span style={{ fontSize: '10px', color: '#c49a2c', lineHeight: 1 }}>❖</span> रु
                 </span>
               </motion.div>
 
@@ -624,16 +666,6 @@ export default function GroomWeddingInvitationHindi() {
 
               <OrnamentalDivider />
 
-              {/* Groom Side Label */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9, duration: 0.5 }}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(254, 243, 199, 0.4) 100%)', border: '1.5px solid rgba(212, 175, 55, 0.4)', borderRadius: '9999px', padding: '4px 16px', marginBottom: '10px', boxShadow: '0 3px 10px rgba(212, 175, 55, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)', animation: 'goldPulse 5s ease-in-out infinite' }}
-              >
-                <span style={{ fontSize: '10px', letterSpacing: '0.12em', color: '#856404', fontWeight: '800' }}>✦ वर पक्ष ✦</span>
-              </motion.div>
-
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -648,7 +680,7 @@ export default function GroomWeddingInvitationHindi() {
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 1.1, duration: 0.8, type: 'spring', stiffness: 80 }}
-                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '54px', color: '#7a2335', margin: '2px 0 4px 0', fontWeight: 'normal', lineHeight: '1.1', textShadow: '0 3px 16px rgba(140, 45, 66, 0.12), 0 1px 4px rgba(212, 175, 55, 0.1)' }}
+                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '48px', color: '#7a2335', margin: '2px 0 4px 0', fontWeight: 'normal', lineHeight: '1.1', textShadow: '0 3px 16px rgba(140, 45, 66, 0.12), 0 1px 4px rgba(212, 175, 55, 0.1)' }}
               >
                 Harsh &amp; Rutbi
               </motion.h1>
@@ -666,13 +698,14 @@ export default function GroomWeddingInvitationHindi() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.3, duration: 0.6 }}
-                style={{ width: '100%', margin: '10px 0 14px 0', display: 'flex', justifyContent: 'center' }}
+                style={{ width: '100%', margin: '8px 0 10px 0', display: 'flex', justifyContent: 'center' }}
               >
                 <HeartScratchCard
                   dateText="बुधवार, 09 दिसंबर 2026"
                   venueText="होटल नालंदा रीजेंसी, राजगीर"
                   foilHeader="तारीख़ याद रखियेगा, जी! 📅"
                   foilSubtitle="टैप करें या स्क्रैच करें"
+                  revealedStatusText=""
                   swipeToScratchText="✨ टैप करें या स्क्रैच करें"
                   scrollButtonText="कार्यक्रम देखें"
                   onScrollRequest={scrollToCelebrations}
@@ -684,7 +717,7 @@ export default function GroomWeddingInvitationHindi() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5, duration: 0.6 }}
-                style={{ width: '100%', marginTop: '8px', marginBottom: '12px', padding: '18px 20px', borderRadius: '24px', background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(254, 243, 225, 0.45) 100%)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1.5px solid rgba(212, 175, 55, 0.2)', boxShadow: '0 12px 32px -8px rgba(140, 45, 66, 0.12), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
+                style={{ width: '100%', marginTop: '4px', marginBottom: '8px', padding: '14px 16px', borderRadius: '24px', background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(254, 243, 225, 0.45) 100%)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1.5px solid rgba(212, 175, 55, 0.2)', boxShadow: '0 12px 32px -8px rgba(140, 45, 66, 0.12), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
               >
                 <GoldShimmer />
                 <div style={{ position: 'relative', zIndex: 2 }}>
@@ -702,25 +735,17 @@ export default function GroomWeddingInvitationHindi() {
               </motion.div>
             </div>
 
-            {/* Architecture SVG */}
-            <div style={{ width: '100%', opacity: 0.4, marginTop: '8px' }}>
-              <svg viewBox="0 0 240 50" fill="none" stroke="#8c2d42" strokeWidth="0.8" style={{ width: '100%', height: '40px' }}>
-                <path d="M10 45 V 25 L 35 12 L 60 25 V 45 M 50 45 V 32 H 70 V 45 M 85 45 V 18 L 120 5 L 155 18 V 45 M 105 45 V 28 H 135 V 45 M 180 45 V 25 L 205 12 L 230 25 V 45" />
-                <circle cx="120" cy="5" r="3" fill="#d4af37" />
-              </svg>
-            </div>
-
             {/* Scroll CTA */}
             <motion.div
               onClick={scrollToCelebrations}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.8 }}
-              style={{ marginTop: '14px', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', cursor: 'pointer' }}
+              transition={{ delay: 1.5 }}
+              style={{ marginTop: '10px', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(254, 243, 199, 0.4) 100%)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(212, 175, 55, 0.25)', padding: '6px 16px', borderRadius: '9999px', boxShadow: '0 3px 10px rgba(140, 45, 66, 0.08), inset 0 1px 1.5px #fff' }}>
-                <span style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '10px', letterSpacing: '0.12em', color: '#8c2d42', fontWeight: '800' }}>कार्यक्रम देखने के लिए स्क्रॉल करें</span>
-                <ChevronDown size={13} color="#8c2d42" className="animate-bounce" />
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, rgba(140, 45, 66, 0.9) 0%, rgba(110, 28, 46, 0.95) 100%)', padding: '10px 24px', borderRadius: '9999px', boxShadow: '0 8px 22px -4px rgba(140, 45, 66, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.3)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+                <span style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '10px', letterSpacing: '0.12em', color: '#ffffff', fontWeight: '700' }}>कार्यक्रम देखें</span>
+                <ChevronDown size={14} color="#ffd700" className="animate-bounce" />
               </div>
             </motion.div>
           </motion.section>
