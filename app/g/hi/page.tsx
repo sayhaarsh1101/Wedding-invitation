@@ -672,7 +672,7 @@ export default function GroomWeddingInvitationHindi() {
                 transition={{ delay: 1 }}
                 style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '13px', letterSpacing: '0.06em', color: '#632533', fontWeight: '600', margin: '0 0 8px 0', lineHeight: '1.7' }}
               >
-                आप सादर आमंत्रित हैं<br />इस शुभ विवाह समारोह में
+                आप सादर आमंत्रित हैं इस शुभ विवाह में
               </motion.p>
 
               {/* Couple Names */}

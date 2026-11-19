@@ -172,7 +172,7 @@ export default function GroomWeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [volume, setVolume] = useState(0.20);
+  const [volume, setVolume] = useState(0.15);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   // Form State & Feedback
@@ -667,7 +667,7 @@ export default function GroomWeddingInvitation() {
                 transition={{ delay: 1 }}
                 style={{ fontSize: '11.5px', letterSpacing: '0.13em', color: '#632533', textTransform: 'uppercase', fontWeight: '500', margin: '0 0 8px 0' }}
               >
-                We request the pleasure of your company<br />to celebrate the wedding of
+                Together with our families, we invite you to celebrate
               </motion.p>
 
               {/* Couple Names — grand entrance */}
