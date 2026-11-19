@@ -43,6 +43,7 @@ const notoHindi = Noto_Serif_Devanagari({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://wedding-invitation-ha-ru1.vercel.app"),
   title: "Harsh & Rutbi - Royal Wedding Invitation",
   description: "We invite you to celebrate the royal wedding ceremony of Harsh and Rutbi. December 9, 2026 at Hotel Nalanda Regency, Rajgir.",
   icons: {
@@ -54,9 +55,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/gallery-4.png",
-        width: 1200,
-        height: 630,
+        url: "/images/og-invite.png",
+        width: 1080,
+        height: 1920,
         alt: "Harsh & Rutbi Wedding",
       },
     ],
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Harsh & Rutbi - Royal Wedding Invitation",
     description: "Join us for the wedding celebration of Harsh & Rutbi on December 9, 2026 at Hotel Nalanda Regency, Rajgir, Bihar.",
-    images: ["/images/gallery-4.png"],
+    images: ["/images/og-invite.png"],
   },
 };
 
