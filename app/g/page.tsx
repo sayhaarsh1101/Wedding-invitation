@@ -685,7 +685,7 @@ export default function GroomWeddingInvitation() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.3, duration: 0.6 }}
-                style={{ width: '100%', margin: '8px 0 10px 0', display: 'flex', justifyContent: 'center' }}
+                style={{ width: '82%', margin: '6px auto 8px auto', display: 'flex', justifyContent: 'center' }}
               >
                 <HeartScratchCard
                   revealedStatusText=""

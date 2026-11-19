@@ -690,7 +690,7 @@ export default function GroomWeddingInvitationHindi() {
                 transition={{ delay: 1.2 }}
                 style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '20px', color: '#8c2d42', margin: '0 0 12px 0', fontWeight: '700' }}
               >
-                हर्ष &amp; रुतबी
+                हर्ष <span style={{ color: '#c49a2c', fontSize: '16px' }}>❖</span> रुतबी
               </motion.p>
 
               {/* Scratch Card */}
@@ -698,7 +698,7 @@ export default function GroomWeddingInvitationHindi() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.3, duration: 0.6 }}
-                style={{ width: '100%', margin: '8px 0 10px 0', display: 'flex', justifyContent: 'center' }}
+                style={{ width: '82%', margin: '6px auto 8px auto', display: 'flex', justifyContent: 'center' }}
               >
                 <HeartScratchCard
                   dateText="बुधवार, 09 दिसंबर 2026"
