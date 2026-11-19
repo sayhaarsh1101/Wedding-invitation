@@ -171,7 +171,7 @@ export default function GroomWeddingInvitationHindi() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [volume, setVolume] = useState(0.25);
+  const [volume, setVolume] = useState(0.20);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   const [rsvpForm, setRsvpForm] = useState<{
@@ -486,7 +486,7 @@ export default function GroomWeddingInvitationHindi() {
 
       <audio ref={audioRef} loop preload="auto" src="/audio/wedding-music.mp3" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
 
-      <LanguageSwitch currentLang="hi" />
+      <LanguageSwitch currentLang="hi" basePath="/g" />
 
       {/* Floating Audio Control with Volume Slider */}
       {(isOpen || isPlaying) && (

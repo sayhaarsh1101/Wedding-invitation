@@ -6,10 +6,11 @@ import { motion } from 'framer-motion';
 
 interface LanguageSwitchProps {
   currentLang: 'en' | 'hi';
+  basePath?: string; // e.g. '/g' for groom pages
 }
 
-export default function LanguageSwitch({ currentLang }: LanguageSwitchProps) {
-  const targetHref = currentLang === 'en' ? '/hi' : '/';
+export default function LanguageSwitch({ currentLang, basePath = '' }: LanguageSwitchProps) {
+  const targetHref = currentLang === 'en' ? `${basePath}/hi` : (basePath || '/');
 
   return (
     <motion.div

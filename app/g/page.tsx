@@ -172,7 +172,7 @@ export default function GroomWeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [volume, setVolume] = useState(0.25);
+  const [volume, setVolume] = useState(0.20);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   // Form State & Feedback
@@ -481,7 +481,7 @@ export default function GroomWeddingInvitation() {
 
       <audio ref={audioRef} loop preload="auto" src="/audio/wedding-music.mp3" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
 
-      <LanguageSwitch currentLang="en" />
+      <LanguageSwitch currentLang="en" basePath="/g" />
 
       {/* Floating Audio Control with Volume Slider */}
       {(isOpen || isPlaying) && (
