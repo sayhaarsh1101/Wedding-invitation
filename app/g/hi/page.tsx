@@ -590,7 +590,7 @@ export default function GroomWeddingInvitationHindi() {
       )}
 
       {/* ═══ ENVELOPE INTRO ═══ */}
-      {!isOpen && <EnvelopeIntro onStartOpen={handleStartOpen} onOpen={handleOpenComplete} />}
+      {!isOpen && <EnvelopeIntro onStartOpen={handleStartOpen} onOpen={handleOpenComplete} lang="hi" />}
 
       {/* ═══ MAIN INVITATION ═══ */}
       {isOpen && (
