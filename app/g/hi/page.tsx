@@ -171,7 +171,7 @@ export default function GroomWeddingInvitationHindi() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [volume, setVolume] = useState(0.20);
+  const [volume, setVolume] = useState(0.30);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   const [rsvpForm, setRsvpForm] = useState<{
@@ -220,6 +220,17 @@ export default function GroomWeddingInvitationHindi() {
     { src: '/images/gallery-2.jpg', title: 'जोड़ी नंबर वन', desc: 'चाय की चुस्कियों से लेकर ज़िंदगी भर का साथ' },
     { src: '/images/gallery-1.jpg', title: '9 दिसंबर का इंतज़ार', desc: 'आपके साथ हमारा सबसे ख़ुशी का दिन' },
   ];
+
+  // Preload gallery images
+  useEffect(() => {
+    galleryImages.forEach((img) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = img.src;
+      document.head.appendChild(link);
+    });
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -795,13 +806,13 @@ export default function GroomWeddingInvitationHindi() {
               </div>
 
               <div style={{ position: 'relative', width: '100%', height: '400px', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 20px 44px rgba(138, 43, 66, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.4)', border: '2px solid rgba(255, 255, 255, 0.9)', backgroundColor: '#1f070e' }}>
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.div
                     key={currentSlide}
-                    initial={{ opacity: 0, scale: 1.06 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
                     style={{ position: 'absolute', inset: 0 }}
                   >
                     <img src={galleryImages[currentSlide].src} alt={galleryImages[currentSlide].title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
