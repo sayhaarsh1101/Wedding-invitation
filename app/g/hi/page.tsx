@@ -215,7 +215,7 @@ export default function GroomWeddingInvitationHindi() {
   )}`;
 
   const galleryImages = [
-    { src: '/images/gallery-4.png', title: 'जहाँ से शुरू हुआ सफ़र', desc: 'एक मुस्कान से शुरू हुई ये अनंत कहानी' },
+    { src: '/images/gallery-4.jpg', title: 'जहाँ से शुरू हुआ सफ़र', desc: 'एक मुस्कान से शुरू हुई ये अनंत कहानी' },
     { src: '/images/gallery-3.jpg', title: 'हमारे खूबसूरत लम्हे', desc: 'दो दीवाने जो अपनी ही बातों पर हँसते हैं' },
     { src: '/images/gallery-2.jpg', title: 'जोड़ी नंबर वन', desc: 'चाय की चुस्कियों से लेकर ज़िंदगी भर का साथ' },
     { src: '/images/gallery-1.jpg', title: '9 दिसंबर का इंतज़ार', desc: 'आपके साथ हमारा सबसे ख़ुशी का दिन' },

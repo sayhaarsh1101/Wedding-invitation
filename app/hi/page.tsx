@@ -69,7 +69,7 @@ export default function HindiWeddingInvitation() {
 
   const galleryImages = [
     {
-      src: '/images/gallery-4.png',
+      src: '/images/gallery-4.jpg',
       title: 'पहली मुस्कान',
       desc: 'जहां से हमारी प्यारी सी कहानी शुरू हुई',
     },

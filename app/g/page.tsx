@@ -172,8 +172,6 @@ export default function GroomWeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [volume, setVolume] = useState(0.30);
-  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   // Form State & Feedback
   const [rsvpForm, setRsvpForm] = useState<{
@@ -201,9 +199,6 @@ export default function GroomWeddingInvitation() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wasPlayingBeforeHiddenRef = useRef<boolean>(false);
-  const gainNodeRef = useRef<GainNode | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const sourceCreatedRef = useRef<boolean>(false);
 
   const weddingVenueName = 'Hotel Nalanda Regency';
   const weddingVenueAddress = 'Dangi Tola, Near Bus Stand, NH 82, Rajgir, Bihar - 803116';
@@ -223,17 +218,6 @@ export default function GroomWeddingInvitation() {
     { src: '/images/gallery-1.jpg', title: 'Ready for Dec 9', desc: 'Counting down to our happiest day with you' },
   ];
 
-  // Preload gallery images
-  useEffect(() => {
-    galleryImages.forEach((img) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = img.src;
-      document.head.appendChild(link);
-    });
-  }, []);
-
   useEffect(() => {
     if (!isOpen) return;
     const interval = setInterval(() => {
@@ -245,40 +229,9 @@ export default function GroomWeddingInvitation() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
 
-  // Setup Web Audio API GainNode for mobile-compatible volume control
-  const initAudioContext = useCallback(() => {
-    if (audioCtxRef.current || !audioRef.current) return;
-    try {
-      const ctx = new (window.AudioContext || (window as unknown as Record<string, typeof AudioContext>).webkitAudioContext)();
-      audioCtxRef.current = ctx;
-      const gainNode = ctx.createGain();
-      gainNode.gain.value = volume;
-      gainNodeRef.current = gainNode;
-      if (!sourceCreatedRef.current) {
-        const source = ctx.createMediaElementSource(audioRef.current);
-        source.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        sourceCreatedRef.current = true;
-      }
-    } catch { /* fallback: volume control won't work on this device */ }
-  }, []);
-
-  // Sync volume to GainNode whenever volume state changes
-  useEffect(() => {
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.value = volume;
-    }
-    // Also try native volume as fallback for desktop
-    if (audioRef.current) {
-      try { audioRef.current.volume = volume; } catch { /* iOS ignores this */ }
-    }
-  }, [volume]);
-
   // Audio Lifecycle
   useEffect(() => {
-    if (audioRef.current) {
-      try { audioRef.current.volume = volume; } catch { /* iOS ignores */ }
-    }
+    if (audioRef.current) audioRef.current.volume = 0.3;
 
     const pauseMusic = () => {
       if (audioRef.current && !audioRef.current.paused) {
@@ -288,7 +241,6 @@ export default function GroomWeddingInvitation() {
     };
     const resumeMusic = () => {
       if (!document.hidden && wasPlayingBeforeHiddenRef.current && audioRef.current) {
-        if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume().catch(() => {});
         audioRef.current.play().catch(() => {});
       }
     };
@@ -315,9 +267,7 @@ export default function GroomWeddingInvitation() {
 
   const handleStartOpen = async () => {
     if (audioRef.current) {
-      initAudioContext();
-      if (audioCtxRef.current?.state === 'suspended') await audioCtxRef.current.resume().catch(() => {});
-      try { await audioRef.current.play(); wasPlayingBeforeHiddenRef.current = true; }
+      try { audioRef.current.volume = 0.3; await audioRef.current.play(); wasPlayingBeforeHiddenRef.current = true; }
       catch { wasPlayingBeforeHiddenRef.current = false; }
     }
   };
@@ -325,19 +275,8 @@ export default function GroomWeddingInvitation() {
 
   const toggleAudio = () => {
     if (!audioRef.current) return;
-    initAudioContext();
     if (!audioRef.current.paused) { audioRef.current.pause(); wasPlayingBeforeHiddenRef.current = false; }
-    else {
-      if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume().catch(() => {});
-      audioRef.current.play().catch(() => {});
-      wasPlayingBeforeHiddenRef.current = true;
-    }
-  };
-
-  const handleVolumeChange = (newVol: number) => {
-    setVolume(newVol);
-    if (gainNodeRef.current) gainNodeRef.current.gain.value = newVol;
-    if (audioRef.current) { try { audioRef.current.volume = newVol; } catch { /* iOS */ } }
+    else { audioRef.current.volume = 0.3; audioRef.current.play().catch(() => {}); wasPlayingBeforeHiddenRef.current = true; }
   };
 
   const handleGoogleSheetsSubmit = async (e: React.FormEvent) => {
@@ -440,7 +379,7 @@ export default function GroomWeddingInvitation() {
   return (
     <div
       style={{
-        minHeight: '100dvh',
+        minHeight: '100vh',
         background: 'linear-gradient(180deg, #fdf6f7 0%, #fceef1 20%, #fff8f0 45%, #fdf2f5 65%, #fef6e8 85%, #fcf0f2 100%)',
         color: '#3b111a',
         fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -492,107 +431,34 @@ export default function GroomWeddingInvitation() {
 
       <audio ref={audioRef} loop preload="auto" src="/audio/wedding-music.mp3" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
 
-      <LanguageSwitch currentLang="en" basePath="/g" />
+      <LanguageSwitch currentLang="en" />
 
-      {/* Floating Audio Control with Volume Slider */}
+      {/* Floating Audio Control */}
       {(isOpen || isPlaying) && (
-        <motion.div
+        <motion.button
+          onClick={toggleAudio}
+          aria-label="Toggle Audio"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-          style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 60, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
+          style={{
+            position: 'fixed', bottom: '24px', right: '24px', zIndex: 60,
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 240, 0.65) 100%)',
+            padding: '14px', borderRadius: '50%',
+            border: '1.5px solid rgba(212, 175, 55, 0.3)',
+            color: '#8c2d42', cursor: 'pointer',
+            backdropFilter: 'blur(24px) saturate(200%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(200%)',
+            boxShadow: '0 10px 28px -4px rgba(115, 35, 53, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 2px 3px rgba(255, 255, 255, 1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            animation: isPlaying ? 'goldPulse 3s ease-in-out infinite' : 'none',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
         >
-          {/* Volume Slider (appears above button) */}
-          <AnimatePresence>
-            {showVolumeSlider && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scaleY: 0.8 }}
-                animate={{ opacity: 1, y: 0, scaleY: 1 }}
-                exit={{ opacity: 0, y: 10, scaleY: 0.8 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 240, 0.8) 100%)',
-                  backdropFilter: 'blur(28px) saturate(200%)',
-                  WebkitBackdropFilter: 'blur(28px) saturate(200%)',
-                  borderRadius: '20px',
-                  padding: '14px 12px',
-                  border: '1.5px solid rgba(212, 175, 55, 0.3)',
-                  boxShadow: '0 10px 28px -4px rgba(115, 35, 53, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 2px 3px rgba(255, 255, 255, 1)',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-                  width: '48px',
-                }}
-              >
-                <span style={{ fontSize: '8px', fontWeight: '800', letterSpacing: '0.08em', color: '#8c2d42', textTransform: 'uppercase' as const }}>{Math.round(volume * 100)}%</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={volume}
-                  onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                  style={{
-                    width: '100px',
-                    height: '4px',
-                    appearance: 'none',
-                    WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #8c2d42 0%, #d4af37 ${volume * 100}%, rgba(212, 175, 55, 0.2) ${volume * 100}%, rgba(212, 175, 55, 0.2) 100%)`,
-                    borderRadius: '2px',
-                    outline: 'none',
-                    cursor: 'pointer',
-                    transform: 'rotate(-90deg)',
-                    transformOrigin: 'center center',
-                  }}
-                />
-                <span style={{ fontSize: '10px', color: '#d4af37' }}>🔊</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Audio Toggle Button */}
-          <button
-            onClick={toggleAudio}
-            onDoubleClick={(e) => { e.preventDefault(); setShowVolumeSlider(v => !v); }}
-            onContextMenu={(e) => { e.preventDefault(); setShowVolumeSlider(v => !v); }}
-            aria-label="Toggle Audio (long press for volume)"
-            onTouchStart={() => {
-              const timer = setTimeout(() => setShowVolumeSlider(v => !v), 500);
-              (window as unknown as Record<string, ReturnType<typeof setTimeout>>).__volTimer = timer;
-            }}
-            onTouchEnd={() => {
-              const timer = (window as unknown as Record<string, ReturnType<typeof setTimeout>>).__volTimer;
-              if (timer) clearTimeout(timer);
-            }}
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 240, 0.65) 100%)',
-              padding: '14px', borderRadius: '50%',
-              border: '1.5px solid rgba(212, 175, 55, 0.3)',
-              color: '#8c2d42', cursor: 'pointer',
-              backdropFilter: 'blur(24px) saturate(200%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(200%)',
-              boxShadow: '0 10px 28px -4px rgba(115, 35, 53, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 2px 3px rgba(255, 255, 255, 1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              animation: isPlaying ? 'goldPulse 3s ease-in-out infinite' : 'none',
-              position: 'relative',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-          >
-            {isPlaying ? <Volume2 size={20} className="animate-pulse" /> : <VolumeX size={20} />}
-          </button>
-          {/* Hint dot */}
-          {isPlaying && !showVolumeSlider && (
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.4, 0.8, 0.4] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              onClick={() => setShowVolumeSlider(true)}
-              style={{ fontSize: '7px', color: '#8c2d42', cursor: 'pointer', marginTop: '-6px', letterSpacing: '0.05em', fontWeight: '700' }}
-            >
-              ● ● ●
-            </motion.span>
-          )}
-        </motion.div>
+          {isPlaying ? <Volume2 size={20} className="animate-pulse" /> : <VolumeX size={20} />}
+        </motion.button>
       )}
 
       {/* ═══ ENVELOPE INTRO ═══ */}
@@ -611,7 +477,7 @@ export default function GroomWeddingInvitation() {
               position: 'relative', borderRadius: '36px',
               border: '1px solid rgba(255, 255, 255, 0.92)',
               boxShadow: '0 28px 60px -14px rgba(138, 43, 66, 0.14), 0 12px 24px -8px rgba(212, 175, 55, 0.08), inset 0 2px 4px 0 rgba(255, 255, 255, 1), inset 0 -2px 3px 0 rgba(212, 175, 55, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.5)',
-              padding: '18px 18px 16px 18px', marginBottom: '28px',
+              padding: '24px 20px 24px 20px', marginBottom: '28px',
               textAlign: 'center', overflow: 'hidden',
               background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 250, 0.62) 50%, rgba(255, 250, 240, 0.45) 100%)',
               backdropFilter: 'blur(32px) saturate(200%)',
@@ -630,7 +496,7 @@ export default function GroomWeddingInvitation() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              style={{ width: '100%', height: '80px', backgroundImage: 'url(/images/floral-arch.jpg)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'top center', mixBlendMode: 'multiply', marginBottom: '0px', position: 'relative', zIndex: 2 }}
+              style={{ width: '100%', height: '110px', backgroundImage: 'url(/images/floral-arch.jpg)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'top center', mixBlendMode: 'multiply', marginBottom: '4px', position: 'relative', zIndex: 2 }}
             />
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', position: 'relative', zIndex: 2 }}>
@@ -640,13 +506,13 @@ export default function GroomWeddingInvitation() {
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.5, duration: 0.8, type: 'spring', stiffness: 120 }}
                 style={{
-                  position: 'relative', width: '68px', height: '68px', borderRadius: '50%',
+                  position: 'relative', width: '80px', height: '80px', borderRadius: '50%',
                   border: '2px solid rgba(212, 175, 55, 0.4)',
                   background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 245, 225, 0.5) 50%, rgba(255, 255, 255, 0.75) 100%)',
                   backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: '0 12px 28px -4px rgba(140, 45, 66, 0.2), 0 0 20px 2px rgba(212, 175, 55, 0.25), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1.5px 2px rgba(212, 175, 55, 0.3), 0 0 0 1px rgba(212, 175, 55, 0.35)',
-                  marginBottom: '8px', overflow: 'hidden',
+                  marginBottom: '12px', overflow: 'hidden',
                   animation: 'goldPulse 4s ease-in-out infinite',
                 }}
               >
@@ -672,13 +538,23 @@ export default function GroomWeddingInvitation() {
 
               <OrnamentalDivider />
 
+              {/* Groom Side Label */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.9, duration: 0.5 }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(254, 243, 199, 0.4) 100%)', border: '1.5px solid rgba(212, 175, 55, 0.4)', borderRadius: '9999px', padding: '4px 16px', marginBottom: '10px', boxShadow: '0 3px 10px rgba(212, 175, 55, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)', animation: 'goldPulse 5s ease-in-out infinite' }}
+              >
+                <span style={{ fontSize: '10px', letterSpacing: '0.18em', color: '#856404', fontWeight: '800', textTransform: 'uppercase' }}>✦ Groom&apos;s Side ✦</span>
+              </motion.div>
+
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1 }}
                 style={{ fontSize: '11.5px', letterSpacing: '0.13em', color: '#632533', textTransform: 'uppercase', fontWeight: '500', margin: '0 0 8px 0' }}
               >
-                Together with our families, we invite you to celebrate
+                We request the pleasure of your company<br />to celebrate the wedding of
               </motion.p>
 
               {/* Couple Names — grand entrance */}
@@ -686,7 +562,7 @@ export default function GroomWeddingInvitation() {
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 1.1, duration: 0.8, type: 'spring', stiffness: 80 }}
-                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '48px', color: '#7a2335', margin: '2px 0 8px 0', fontWeight: 'normal', lineHeight: '1.1', textShadow: '0 3px 16px rgba(140, 45, 66, 0.12), 0 1px 4px rgba(212, 175, 55, 0.1)' }}
+                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '54px', color: '#7a2335', margin: '2px 0 12px 0', fontWeight: 'normal', lineHeight: '1.1', textShadow: '0 3px 16px rgba(140, 45, 66, 0.12), 0 1px 4px rgba(212, 175, 55, 0.1)' }}
               >
                 Harsh &amp; Rutbi
               </motion.h1>
@@ -696,10 +572,15 @@ export default function GroomWeddingInvitation() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.3, duration: 0.6 }}
-                style={{ width: '82%', margin: '6px auto 8px auto', display: 'flex', justifyContent: 'center' }}
+                style={{ width: '100%', margin: '10px 0 14px 0', display: 'flex', justifyContent: 'center' }}
               >
                 <HeartScratchCard
-                  revealedStatusText=""
+                  dateText="WEDNESDAY, DEC 09, 2026"
+                  venueText="Hotel Nalanda Regency, Rajgir"
+                  foilHeader="Mark Your Calendar, Ji! 📅"
+                  foilSubtitle="Tap or scratch to reveal"
+                  swipeToScratchText="✨ Tap or scratch to reveal"
+                  scrollButtonText="View Events & Itinerary"
                   onScrollRequest={scrollToCelebrations}
                 />
               </motion.div>
@@ -709,7 +590,7 @@ export default function GroomWeddingInvitation() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5, duration: 0.6 }}
-                style={{ width: '100%', marginTop: '4px', marginBottom: '8px', padding: '14px 16px', borderRadius: '24px', background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(254, 243, 225, 0.45) 100%)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1.5px solid rgba(212, 175, 55, 0.2)', boxShadow: '0 12px 32px -8px rgba(140, 45, 66, 0.12), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
+                style={{ width: '100%', marginTop: '8px', marginBottom: '12px', padding: '18px 20px', borderRadius: '24px', background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.82) 0%, rgba(254, 243, 225, 0.45) 100%)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', border: '1.5px solid rgba(212, 175, 55, 0.2)', boxShadow: '0 12px 32px -8px rgba(140, 45, 66, 0.12), inset 0 2px 3px rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(212, 175, 55, 0.15)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}
               >
                 <GoldShimmer />
                 <div style={{ position: 'relative', zIndex: 2 }}>
@@ -727,17 +608,25 @@ export default function GroomWeddingInvitation() {
               </motion.div>
             </div>
 
+            {/* Architecture SVG */}
+            <div style={{ width: '100%', opacity: 0.4, marginTop: '8px' }}>
+              <svg viewBox="0 0 240 50" fill="none" stroke="#8c2d42" strokeWidth="0.8" style={{ width: '100%', height: '40px' }}>
+                <path d="M10 45 V 25 L 35 12 L 60 25 V 45 M 50 45 V 32 H 70 V 45 M 85 45 V 18 L 120 5 L 155 18 V 45 M 105 45 V 28 H 135 V 45 M 180 45 V 25 L 205 12 L 230 25 V 45" />
+                <circle cx="120" cy="5" r="3" fill="#d4af37" />
+              </svg>
+            </div>
+
             {/* Scroll CTA */}
             <motion.div
               onClick={scrollToCelebrations}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              style={{ marginTop: '10px', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+              transition={{ delay: 1.8 }}
+              style={{ marginTop: '14px', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '2px', cursor: 'pointer' }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, rgba(140, 45, 66, 0.9) 0%, rgba(110, 28, 46, 0.95) 100%)', padding: '10px 24px', borderRadius: '9999px', boxShadow: '0 8px 22px -4px rgba(140, 45, 66, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.3)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
-                <span style={{ fontSize: '10px', letterSpacing: '0.16em', color: '#ffffff', fontWeight: '700' }}>SCROLL FOR CELEBRATIONS</span>
-                <ChevronDown size={14} color="#ffd700" className="animate-bounce" />
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(254, 243, 199, 0.4) 100%)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(212, 175, 55, 0.25)', padding: '6px 16px', borderRadius: '9999px', boxShadow: '0 3px 10px rgba(140, 45, 66, 0.08), inset 0 1px 1.5px #fff' }}>
+                <span style={{ fontSize: '9.5px', textTransform: 'uppercase', letterSpacing: '0.22em', color: '#8c2d42', fontWeight: '800' }}>Scroll for Itinerary</span>
+                <ChevronDown size={13} color="#8c2d42" className="animate-bounce" />
               </div>
             </motion.div>
           </motion.section>
@@ -787,13 +676,13 @@ export default function GroomWeddingInvitation() {
               </div>
 
               <div style={{ position: 'relative', width: '100%', height: '400px', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 20px 44px rgba(138, 43, 66, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.4)', border: '2px solid rgba(255, 255, 255, 0.9)', backgroundColor: '#1f070e' }}>
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence mode="wait">
                   <motion.div
                     key={currentSlide}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    initial={{ opacity: 0, scale: 1.06 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     style={{ position: 'absolute', inset: 0 }}
                   >
                     <img src={galleryImages[currentSlide].src} alt={galleryImages[currentSlide].title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />

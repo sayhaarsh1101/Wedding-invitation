@@ -69,7 +69,7 @@ export default function WeddingInvitation() {
 
   const galleryImages = [
     {
-      src: '/images/gallery-4.png',
+      src: '/images/gallery-4.jpg',
       title: 'When It All Began',
       desc: 'A stolen smile that turned into forever',
     },
