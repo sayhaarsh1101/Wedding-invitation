@@ -107,6 +107,15 @@ export default function WeddingInvitation() {
     setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
+  // Preload gallery images when envelope opens
+  useEffect(() => {
+    if (!isOpen) return;
+    galleryImages.forEach((img) => {
+      const preload = new Image();
+      preload.src = img.src;
+    });
+  }, [isOpen]);
+
   // Audio Lifecycle: Auto-pause when switching tabs/apps, auto-resume on return
   useEffect(() => {
     if (audioRef.current) {
@@ -660,13 +669,13 @@ export default function WeddingInvitation() {
                 backgroundColor: '#1f070e',
               }}
             >
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={currentSlide}
-                  initial={{ opacity: 0, scale: 1.03 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  transition={{ duration: 0.4 }}
                   style={{ position: 'absolute', inset: 0 }}
                 >
                   <img

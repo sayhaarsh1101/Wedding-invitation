@@ -212,7 +212,7 @@ export default function GroomWeddingInvitation() {
   )}`;
 
   const galleryImages = [
-    { src: '/images/gallery-4.png', title: 'When It All Began', desc: 'A stolen smile that turned into forever' },
+    { src: '/images/gallery-4.jpg', title: 'When It All Began', desc: 'A stolen smile that turned into forever' },
     { src: '/images/gallery-3.jpg', title: 'Our Favorite Days', desc: 'Just two goofy souls laughing at our own jokes' },
     { src: '/images/gallery-2.jpg', title: 'Partners in Crime', desc: 'From quick chai dates to lifelong adventures' },
     { src: '/images/gallery-1.jpg', title: 'Ready for Dec 9', desc: 'Counting down to our happiest day with you' },
@@ -228,6 +228,15 @@ export default function GroomWeddingInvitation() {
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+
+  // Preload gallery images when envelope opens
+  useEffect(() => {
+    if (!isOpen) return;
+    galleryImages.forEach((img) => {
+      const preload = new Image();
+      preload.src = img.src;
+    });
+  }, [isOpen]);
 
   // Audio Lifecycle
   useEffect(() => {
@@ -676,16 +685,16 @@ export default function GroomWeddingInvitation() {
               </div>
 
               <div style={{ position: 'relative', width: '100%', height: '400px', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 20px 44px rgba(138, 43, 66, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.4)', border: '2px solid rgba(255, 255, 255, 0.9)', backgroundColor: '#1f070e' }}>
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.div
                     key={currentSlide}
-                    initial={{ opacity: 0, scale: 1.06 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
                     style={{ position: 'absolute', inset: 0 }}
                   >
-                    <img src={galleryImages[currentSlide].src} alt={galleryImages[currentSlide].title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                    <img src={galleryImages[currentSlide].src} alt={galleryImages[currentSlide].title} loading="eager" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, transparent 35%, rgba(15,2,6,0.88) 100%)', pointerEvents: 'none' }} />
                     <div style={{ position: 'absolute', bottom: '24px', left: '18px', right: '18px', textAlign: 'center', color: '#ffffff', textShadow: '0 2px 10px rgba(0,0,0,0.9)' }}>
                       <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '19px', fontWeight: '600', color: '#ffd54f', margin: '0 0 3px 0', textShadow: '0 2px 12px rgba(212, 175, 55, 0.4)' }}>{galleryImages[currentSlide].title}</h3>
